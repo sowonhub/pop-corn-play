@@ -6,7 +6,7 @@ export default function MovieCard({ movie }) {
     : "https://placehold.co/300x450?text=No+Image";
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 transition hover:-translate-y-0.5 hover:shadow-xl">
+    <article className="group overflow-hidden rounded-xl border border-neutral-200 bg-white text-neutral-900 transition hover:-translate-y-0.5 hover:shadow-xl dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-50">
       <Link to={`/movie/${movie.id}`} aria-label={`${movie.title} 상세보기`}>
         <img
           src={img}
@@ -17,7 +17,7 @@ export default function MovieCard({ movie }) {
       </Link>
       <div className="space-y-1 p-3">
         <h3 className="line-clamp-2 text-sm font-semibold">{movie.title}</h3>
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
           ⭐ {movie.vote_average?.toFixed?.(1) ?? "-"}
         </p>
       </div>
