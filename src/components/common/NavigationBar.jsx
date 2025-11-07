@@ -1,26 +1,57 @@
+import { useAuth } from "@/app/auth/AuthProvider.jsx";
 import Container from "@/components/common/Container.jsx";
 import SearchInput from "@/components/common/SearchInput.jsx";
 import ThemeToggle from "@/components/common/ThemeToggle.jsx";
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
+  const auth = useAuth(); // 방어
+  const user = auth?.user;
+  const logout = auth?.logout ?? (() => {});
+
   return (
-    <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/70 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70">
-      <Container>
-        <div className="flex items-center justify-between py-3">
-          {/* 좌측 로고: 가장자리 여백 */}
+    <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
+      <Container className="px-4">
+        <div className="flex h-12 items-center justify-between gap-3 sm:h-14">
+          {/* Left: Logo */}
           <Link
             href="/"
-            className="pl-2 text-base font-bold md:pl-3 md:text-lg"
+            className="shrink-0 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100"
           >
-            <span className="text-neutral-900 dark:text-neutral-50">
-              🎬 Mini Movies
-            </span>
+            🎬 Mini Movies
           </Link>
-          {/* 우측 검색창: 가장자리 여백 */}
-          <div className="flex items-center gap-2 pr-2 md:pr-3">
+
+          {/* Center: Search (가로가 넓을 때만 확장) */}
+          <div className="hidden max-w-xl flex-1 sm:block">
             <SearchInput />
+          </div>
+
+          {/* Right: actions */}
+          <div className="flex items-center gap-2">
+            {/* 모바일에서는 아이콘만, sm↑에서는 텍스트 버튼 */}
+            <div className="w-40 sm:hidden">
+              <SearchInput compact />
+            </div>
+
             <ThemeToggle />
+
+            {user ? (
+              <button
+                onClick={logout}
+                className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                title="로그아웃"
+              >
+                로그아웃
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                title="로그인"
+              >
+                로그인
+              </Link>
+            )}
           </div>
         </div>
       </Container>

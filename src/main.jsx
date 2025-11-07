@@ -1,11 +1,14 @@
+import Providers from "@/app/providers.jsx";
 import { router } from "@/app/router.jsx";
 import "@/styles/tailwind.css";
-import React from "react";
-import ReactDOM from "react-dom/client";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
+  </StrictMode>,
 );
