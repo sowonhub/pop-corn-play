@@ -2,16 +2,10 @@
 <html lang="en">
   <head>
     <script>
-      (function () {
-        try {
-          const saved = localStorage.getItem("theme"); // 'dark' | 'light' | null
-          const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-          ).matches;
-          const isDark = saved ? saved === "dark" : prefersDark;
-          document.documentElement.classList.toggle("dark", isDark);
-        } catch (_) {}
-      })();
+      try {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.classList.add("dark");
+      } catch {}
     </script>
 
     <meta charset="UTF-8" />
