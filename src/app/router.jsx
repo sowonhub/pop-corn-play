@@ -4,6 +4,7 @@ import HomePage from "@/pages/HomePage.jsx";
 import LoginPage from "@/pages/LoginPage.jsx";
 import MovieDetailPage from "@/pages/MovieDetailPage.jsx";
 import SearchPage from "@/pages/SearchPage.jsx";
+import SignupPage from "@/pages/SignupPage.jsx";
 import { createBrowserRouter } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { path: "movie/:id", element: <MovieDetailPage /> },
       { path: "search", element: <SearchPage /> },
       { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
       {
         element: <ProtectedRoute />,
         children: [

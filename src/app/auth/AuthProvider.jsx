@@ -31,8 +31,20 @@ export default function AuthProvider({ children }) {
 
   const logout = () => supabase.auth.signOut();
 
+  // 회원가입: 기본은 인증메일 발송 후 확인 필요
+  const signUp = (email, password) =>
+    supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`, // 이메일 확인 후 돌아올 경로
+      },
+    });
+
   return (
-    <AuthCtx.Provider value={{ user, busy, login, logout, isAuthed: !!user }}>
+    <AuthCtx.Provider
+      value={{ user, busy, login, logout, signUp, isAuthed: !!user }}
+    >
       {children}
     </AuthCtx.Provider>
   );

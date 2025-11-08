@@ -44,13 +44,20 @@ export default function NavigationBar() {
                 로그아웃
               </button>
             ) : (
-              <Link
-                to="/login"
-                className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
-                title="로그인"
-              >
-                로그인
-              </Link>
+              <>
+                <Link
+                  to="/signup"
+                  className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                >
+                  회원가입
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
+                >
+                  로그인
+                </Link>
+              </>
             )}
           </div>
         </div>
