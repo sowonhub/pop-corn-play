@@ -33,7 +33,7 @@ export default function LoginPage() {
       <h1 className="mb-4 text-xl font-semibold">로그인</h1>
       <form onSubmit={onSubmit} className="space-y-3">
         <input
-          id="loginbox"
+          id="loginBox"
           type="email"
           required
           value={email}
@@ -42,7 +42,7 @@ export default function LoginPage() {
           className="w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50"
         />
         <input
-          id="passwordbox"
+          id="passwordBox"
           type="password"
           required
           value={pw}
