@@ -2,6 +2,7 @@ import { useAuth } from "@/app/auth/context.js";
 import { Container } from "@/components/common";
 import SearchInput from "@/components/common/SearchInput.jsx";
 import { ROUTES } from "@/constants";
+import { cn } from "@/utils/cn";
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
@@ -10,7 +11,11 @@ export default function NavigationBar() {
   const logout = auth?.logout ?? (() => {});
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70",
+      )}
+    >
       <Container className="px-4">
         <div className="flex h-12 items-center justify-between gap-3 sm:h-14">
           {/* Left: Logo */}
