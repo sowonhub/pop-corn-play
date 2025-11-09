@@ -1,14 +1,55 @@
-import Providers from "@/app/providers.jsx";
-import { router } from "@/app/router.jsx";
 import "@/styles/tailwind.css";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Providers>
+import React from "react";
+import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+
+import Layout from "@/components/common/Layout.jsx";
+import HomePage from "@/pages/HomePage.jsx";
+import LoginPage from "@/pages/LoginPage.jsx";
+import MovieDetailPage from "@/pages/MovieDetailPage.jsx";
+import SearchPage from "@/pages/SearchPage.jsx";
+
+import {
+  default as AuthProvider,
+  default as useAuth,
+} from "@/app/auth/AuthProvider.jsx";
+
+function RequireAuth({ children }) {
+  const { user, busy } = useAuth();
+  if (busy) return <div className="p-6">로딩 중…</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "search", element: <SearchPage /> },
+      { path: "movie/:id", element: <MovieDetailPage /> },
+      { path: "login", element: <LoginPage /> },
+      {
+        path: "mypage",
+        element: <RequireAuth>{/* <MyPage /> */}</RequireAuth>,
+      },
+      {
+        path: "*",
+        element: <div className="p-6">페이지를 찾을 수 없어요.</div>,
+      },
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <AuthProvider>
       <RouterProvider router={router} />
-    </Providers>
-  </StrictMode>,
+    </AuthProvider>
+  </React.StrictMode>,
 );

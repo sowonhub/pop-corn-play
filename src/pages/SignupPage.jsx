@@ -1,4 +1,4 @@
-import { useAuth } from "@/app/auth/AuthProvider.jsx";
+import { useAuth } from "@/app/auth/Context.jsx";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
