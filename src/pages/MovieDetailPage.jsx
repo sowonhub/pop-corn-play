@@ -3,6 +3,7 @@ import Button from "@/components/common/Button.jsx";
 import Container from "@/components/common/Container.jsx";
 import Skeleton from "@/components/common/Skeleton.jsx";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail.js";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function minToHM(min = 0) {
@@ -14,6 +15,8 @@ function minToHM(min = 0) {
 export default function MovieDetailPage() {
   const { id } = useParams();
   const { data: m, loading, error } = useMovieDetail(Number(id));
+  const [inWish, setInWish] = useState(false);
+  const toggleWish = () => setInWish((v) => !v);
 
   if (loading) {
     return (
@@ -143,7 +146,13 @@ export default function MovieDetailPage() {
                 예고편 보기
               </Button>
 
-              <Button className="h-10 border border-neutral-300 bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-100">
+              <Button
+                type="button"
+                aria-label={inWish ? "위시리스트에서 제거" : "위시리스트 추가"}
+                aria-pressed={inWish}
+                onClick={toggleWish}
+                className="h-10 border border-neutral-300 bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+              >
                 위시리스트
               </Button>
             </div>

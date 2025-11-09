@@ -57,6 +57,7 @@ export default function NavigationBar() {
                   회원가입
                 </Link>
                 <Link
+                  type="submit"
                   to={ROUTES.LOGIN}
                   className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 >
