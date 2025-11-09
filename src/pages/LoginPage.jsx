@@ -1,4 +1,4 @@
-import useAuth from "@/app/auth/AuthProvider.jsx";
+import { useAuth } from "@/app/auth/context.js";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 

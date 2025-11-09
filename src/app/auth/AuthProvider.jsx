@@ -1,6 +1,6 @@
-import { supabase } from "@/constants/supabase.js";
+import { supabase } from "@/lib/supabase.js";
 import { useEffect, useState } from "react";
-import { AuthCtx } from "./Context.jsx";
+import { AuthCtx } from "./context.js";
 
 // const AuthCtx = createContext(null);
 // const useAuth = () => useContext(AuthCtx);

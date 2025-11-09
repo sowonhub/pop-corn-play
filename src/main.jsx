@@ -1,4 +1,4 @@
-import "@/styles/tailwind.css";
+import "@/styles/index.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -8,18 +8,20 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Layout from "@/components/common/Layout.jsx";
+import { Layout } from "@/components/layout";
+
 import HomePage from "@/pages/HomePage.jsx";
 import LoginPage from "@/pages/LoginPage.jsx";
 import MovieDetailPage from "@/pages/MovieDetailPage.jsx";
 import SearchPage from "@/pages/SearchPage.jsx";
+import SignupPage from "@/pages/SignupPage.jsx";
 
 import {
   default as AuthProvider,
   default as useAuth,
 } from "@/app/auth/AuthProvider.jsx";
 
-function RequireAuth({ children }) {
+export function RequireAuth({ children }) {
   const { user, busy } = useAuth();
   if (busy) return <div className="p-6">로딩 중…</div>;
   if (!user) return <Navigate to="/login" replace />;
@@ -34,6 +36,7 @@ const router = createBrowserRouter([
       { path: "search", element: <SearchPage /> },
       { path: "movie/:id", element: <MovieDetailPage /> },
       { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
       {
         path: "mypage",
         element: <RequireAuth>{/* <MyPage /> */}</RequireAuth>,

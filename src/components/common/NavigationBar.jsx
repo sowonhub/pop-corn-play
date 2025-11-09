@@ -1,6 +1,7 @@
-import { useAuth } from "@/app/auth/Context.jsx";
-import Container from "@/components/common/Container.jsx";
+import { useAuth } from "@/app/auth/context.js";
+import { Container } from "@/components/common";
 import SearchInput from "@/components/common/SearchInput.jsx";
+import { ROUTES } from "@/constants";
 import { Link } from "react-router-dom";
 
 export default function NavigationBar() {
@@ -45,13 +46,13 @@ export default function NavigationBar() {
             ) : (
               <>
                 <Link
-                  to="/signup"
+                  to={ROUTES.SIGNUP}
                   className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 >
                   회원가입
                 </Link>
                 <Link
-                  to="/login"
+                  to={ROUTES.LOGIN}
                   className="inline-flex h-9 items-center rounded-xl border border-neutral-300 px-3 text-sm leading-none text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-800"
                 >
                   로그인

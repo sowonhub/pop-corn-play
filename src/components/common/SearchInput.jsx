@@ -18,7 +18,6 @@ export default function SearchInput({ compact = false }) {
     <form onSubmit={onSubmit} role="search" aria-label="영화 검색">
       <div className={`relative ${compact ? "" : "w-full"}`}>
         <input
-          id="searchbox"
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}

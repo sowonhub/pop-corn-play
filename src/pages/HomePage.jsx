@@ -1,6 +1,6 @@
 import Container from "@/components/common/Container.jsx";
 import Section from "@/components/common/Section.jsx";
-import Top10HeroBanner from "@/components/common/Top10HeroBanner.jsx";
+import { Top10HeroBanner } from "@/features/home/components";
 import MovieGrid from "@/features/movie/components/MovieGrid.jsx";
 
 export default function HomePage() {
