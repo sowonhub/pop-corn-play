@@ -1,4 +1,5 @@
-import { useAuth } from "@/app/auth/context.js";
+import { cn } from "@/cn";
+import { useAuth } from "@/Context.js";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -29,8 +30,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mx-auto max-w-sm p-6">
-      <h1 className="mb-4 text-xl font-semibold">로그인</h1>
+    <div className={cn("mx-auto max-w-sm p-6")}>
+      <h1 className={cn("mb-4 text-xl font-semibold")}>로그인</h1>
       <form onSubmit={onSubmit} className="space-y-3">
         <input
           id="loginBox"
@@ -39,7 +40,9 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="이메일"
-          className="w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50"
+          className={cn(
+            "w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50",
+          )}
         />
         <input
           id="passwordBox"
@@ -48,12 +51,16 @@ export default function LoginPage() {
           value={pw}
           onChange={(e) => setPw(e.target.value)}
           placeholder="비밀번호"
-          className="w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50"
+          className={cn(
+            "w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50",
+          )}
         />
-        {err && <p className="text-sm text-red-500">{err}</p>}
+        {err && <p className={cn("text-sm text-red-500")}>{err}</p>}
         <button
           disabled={loading}
-          className="w-full rounded-md border border-neutral-300 bg-neutral-900 px-3 py-2 text-white disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-200 dark:text-neutral-900"
+          className={cn(
+            "w-full rounded-md border border-neutral-300 bg-neutral-900 px-3 py-2 text-white disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-200 dark:text-neutral-900",
+          )}
         >
           {loading ? "로그인 중…" : "로그인"}
         </button>
