@@ -1,4 +1,4 @@
-import NavigationBar from "@/components/common/NavigationBar.jsx";
+import NavigationBar from "@/components/layout/NavigationBar.jsx";
 import { Outlet } from "react-router-dom";
 
 export default function Layout() {
