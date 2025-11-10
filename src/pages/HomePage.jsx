@@ -1,16 +1,16 @@
-import { Container, Section } from "@/components/common";
-import { Top10HeroBanner } from "@/features/home/components";
-import { MovieGrid } from "@/features/movie/components";
+import { Container, Section } from "@/components";
+import { TopBanner } from "@/features/movies";
+import { Grid } from "@/features/movies/index";
 
 export default function HomePage() {
   return (
     <Container>
       <Section title="Top 10" titleDescription="오늘 많이 본 영화">
-        <Top10HeroBanner />
+        <TopBanner />
       </Section>
 
       <Section title="Popular" titleDescription="지금 뜨는 작품">
-        <MovieGrid />
+        <Grid />
       </Section>
     </Container>
   );
