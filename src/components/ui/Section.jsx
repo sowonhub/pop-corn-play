@@ -4,7 +4,6 @@ import { useId } from "react";
 export default function section({
   title,
   titleDescription,
-  // as: Tag = "section",
   className,
   children,
 }) {
@@ -16,21 +15,17 @@ export default function section({
       aria-labelledby={title ? headingId : undefined}
     >
       {(title || titleDescription) && (
-        <div className={cn("mb-4 flex items-end justify-between gap-3")}>
+        <div className="mb-4 flex items-end justify-between gap-3">
           {title && (
             <h2
               id={headingId}
-              className={cn(
-                "text-xl font-semibold text-neutral-900 md:text-2xl dark:text-neutral-100",
-              )}
+              className="text-xl font-semibold text-neutral-900 md:text-2xl dark:text-neutral-100"
             >
               {title}
             </h2>
           )}
           {titleDescription && (
-            <div
-              className={cn("text-sm text-neutral-500 dark:text-neutral-400")}
-            >
+            <div className="text-sm text-neutral-500 dark:text-neutral-400">
               {titleDescription}
             </div>
           )}

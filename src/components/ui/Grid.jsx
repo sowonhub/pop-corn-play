@@ -1,29 +1,37 @@
+/**
+ * [7-2단계] components/ui/Grid.jsx - 영화 그리드 컴포넌트
+ * 
+ * 이 컴포넌트는:
+ * 1. 인기 영화 목록을 가져옵니다
+ * 2. 영화 카드들을 그리드 형태로 보여줍니다
+ * 
+ * 실행 순서:
+ * - HomePage에서 이 컴포넌트를 사용합니다
+ * 
+ * 다음 단계:
+ *   [7-2-1단계] hooks/movies/usePopular.js (영화 데이터 가져오기)
+ *   [7-2-2단계] components/movies/Card.jsx (각 영화 카드)
+ */
+
 import { Card } from "@/components/movies";
-import { Button, Skeleton } from "@/components/ui";
+import { EmptyState, ErrorState, Skeleton } from "@/components/ui";
 import { usePopular } from "@/hooks/movies";
-import { cn } from "@/utils/cn.js";
 
 export default function Grid() {
-  const { data, loading, error } = usePopular(); // page=1 기본
+  const { data, loading, error } = usePopular();
 
   if (loading) {
     return (
-      <div
-        className={cn(
-          "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
-        )}
-      >
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (
           <div
             key={i}
-            className={cn(
-              "overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900",
-            )}
+            className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900"
           >
-            <Skeleton className={cn("aspect-2/3 w-full")} />
-            <div className={cn("space-y-2 p-3")}>
-              <Skeleton className={cn("h-4 w-3/4")} />
-              <Skeleton className={cn("h-3 w-1/3")} />
+            <Skeleton className="aspect-2/3 w-full" />
+            <div className="space-y-2 p-3">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/3" />
             </div>
           </div>
         ))}
@@ -33,38 +41,20 @@ export default function Grid() {
 
   if (error) {
     return (
-      <div
-        className={cn(
-          "rounded-lg border border-red-700 bg-red-900/20 p-4 text-sm text-red-300",
-        )}
-      >
-        불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
-        <div className={cn("mt-3")}>
-          <Button onClick={() => location.reload()}>새로고침</Button>
-        </div>
-      </div>
+      <ErrorState
+        message="불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+        onRetry={() => location.reload()}
+      />
     );
   }
 
   const list = data?.results ?? [];
   if (list.length === 0) {
-    return (
-      <div
-        className={cn(
-          "rounded-lg border border-neutral-800 bg-neutral-900 p-6 text-center text-neutral-300",
-        )}
-      >
-        표시할 영화가 없어요.
-      </div>
-    );
+    return <EmptyState message="표시할 영화가 없어요." />;
   }
 
   return (
-    <div
-      className={cn(
-        "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
-      )}
-    >
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
       {list.map((m) => (
         <Card key={m.id} movie={m} />
       ))}

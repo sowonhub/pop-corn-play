@@ -1,32 +1,32 @@
-import { tmdbUrl } from "@/services/auth/TMDB.js";
-import { useEffect, useState } from "react";
+/**
+ * [7-1-1단계] hooks/movies/useTop.js - 인기 영화 데이터를 가져오는 훅
+ * 
+ * 이 훅은:
+ * 1. TMDB API에서 인기 영화를 가져옵니다
+ * 2. 상위 10개만 반환합니다
+ * 
+ * 실행 순서:
+ * - TopBanner 컴포넌트에서 이 훅을 사용합니다
+ * 
+ * 다음 단계:
+ *   [7-1-1-1단계] hooks/useFetch.js (공통 API 호출 로직)
+ *   [7-1-1-2단계] services/tmdb/movies.js (실제 API 호출)
+ */
+
+import useFetch from "../useFetch.js";
+import { getTrendingMovies } from "@/services/tmdb";
 
 export default function useTop() {
-  const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState(null);
+  // useFetch 훅을 사용해서 API 호출
+  const { data, loading, error } = useFetch(
+    ({ signal }) => getTrendingMovies({ signal }),
+    [], // 빈 배열: 컴포넌트가 처음 마운트될 때만 호출
+  );
 
-  useEffect(() => {
-    const ac = new AbortController();
-    (async () => {
-      try {
-        setLoading(true);
-        const url = tmdbUrl("/trending/movie/day", { language: "ko-KR" });
-        const res = await fetch(url, {
-          signal: ac.signal,
-          headers: { Accept: "application/json" },
-        });
-        if (!res.ok) throw new Error(`TMDB ${res.status}`);
-        const data = await res.json();
-        setList((data?.results ?? []).slice(0, 10));
-      } catch (e) {
-        if (e.name !== "AbortError") setErr(e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-    return () => ac.abort();
-  }, []);
-
-  return { list, loading, err };
+  // 상위 10개만 반환
+  return {
+    list: (data?.results ?? []).slice(0, 10),
+    loading,
+    error,
+  };
 }

@@ -1,17 +1,36 @@
-import { ROUTES } from "@/constants/routes";
-import { useTop } from "@/hooks/movies";
-import { cn } from "@/utils/cn";
+/**
+ * [7-1단계] components/movies/TopBanner.jsx - Top 10 영화 배너 컴포넌트
+ * 
+ * 이 컴포넌트는:
+ * 1. 인기 영화 10개를 가져옵니다
+ * 2. 4초마다 자동으로 다음 영화로 넘어갑니다
+ * 3. 마우스를 올리면 자동 넘김을 멈춥니다
+ * 
+ * 실행 순서:
+ * - HomePage에서 이 컴포넌트를 사용합니다
+ * 
+ * 다음 단계:
+ *   [7-1-1단계] hooks/movies/useTop.js (영화 데이터 가져오기)
+ */
+
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
-const INTERVAL_TIME = 4000;
+import { useTop } from "@/hooks/movies";
+import { ROUTES } from "@/router";
+import { tmdbImgSrc } from "@/services/tmdb";
+import { cn } from "@/utils/cn";
 
-const getImageUrl = ({ path, size = "original" }) =>
-  path ? `${BASE_IMAGE_URL}${size}${path}` : "";
+const INTERVAL_TIME = 4000; // 4초마다 자동 넘김
 
-const getNextCircularIndex = (currentIndex, arrayLength) =>
-  (currentIndex + 1) % arrayLength;
+// 이미지 URL 생성 함수
+const getImageUrl = (path, size = "w1280") =>
+  tmdbImgSrc(path, "backdrop", size);
+
+// 다음 인덱스 계산 (마지막이면 처음으로)
+const getNextIndex = (i, len) => (i + 1) % len;
+// 이전 인덱스 계산 (처음이면 마지막으로)
+const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
   const { list, loading } = useTop();
@@ -20,16 +39,15 @@ export default function TopBanner() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (loading || !list.length || paused) {
-      return;
-    }
+    if (loading || !list.length || paused) return;
 
-    timerRef.current = setInterval(() => {
-      setIndex((i) => getNextCircularIndex(i, list.length));
-    }, INTERVAL_TIME);
+    timerRef.current = setInterval(
+      () => setIndex((i) => getNextIndex(i, list.length)),
+      INTERVAL_TIME,
+    );
 
     return () => clearInterval(timerRef.current);
-  }, [list, loading, paused]);
+  }, [list.length, loading, paused]);
 
   if (loading) {
     return (
@@ -42,34 +60,28 @@ export default function TopBanner() {
   }
 
   const cur = list[index];
-  const bg = getImageUrl({
-    path: cur.backdrop_path || cur.poster_path,
-    size: "w1280",
-  });
+  const bg = getImageUrl(cur.backdrop_path || cur.poster_path);
 
-  const goPrev = () => setIndex((i) => (i - 1 + list.length) % list.length);
-  const goNext = () => setIndex((i) => getNextCircularIndex(i, list.length));
+  const goPrev = () => setIndex((i) => getPrevIndex(i, list.length));
+  const goNext = () => setIndex((i) => getNextIndex(i, list.length));
 
   return (
     <section
-      className={cn("relative aspect-video w-full overflow-hidden rounded-xl")}
+      className="relative aspect-video w-full overflow-hidden rounded-xl"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
       aria-label="Top 10 영화 배너"
     >
-      {/* 배경 이미지 */}
       <img
         src={bg}
         alt={cur.title || cur.name}
-        className={cn("absolute inset-0 h-full w-full object-cover")}
+        className="absolute inset-0 h-full w-full object-cover"
         draggable={false}
       />
-      {/* 그라데이션 오버레이 */}
       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
 
-      {/* 콘텐츠 */}
       <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
         <div className="mb-2 text-sm opacity-80">
           Top 10 · {index + 1} / {list.length}
@@ -90,7 +102,6 @@ export default function TopBanner() {
         </div>
       </div>
 
-      {/* 좌우 네비게이션 */}
       <button
         type="button"
         onClick={goPrev}
@@ -108,7 +119,6 @@ export default function TopBanner() {
         ›
       </button>
 
-      {/* 도트 인디케이터 */}
       <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
         {list.map((_, i) => (
           <button

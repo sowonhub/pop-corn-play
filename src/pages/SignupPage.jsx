@@ -1,33 +1,56 @@
-import { useAuth } from "@/Context.js";
-import { cn } from "@/utils/cn";
+/**
+ * [11단계] pages/SignupPage.jsx - 회원가입 페이지 컴포넌트
+ * 
+ * 이 페이지는:
+ * 1. 이메일, 비밀번호, 비밀번호 확인을 입력받습니다
+ * 2. 약관 동의를 받습니다
+ * 3. 회원가입 버튼을 클릭하면 회원가입을 시도합니다
+ * 4. 성공하면 인증 메일 안내를 보여줍니다
+ * 
+ * 실행 순서:
+ * - URL이 "/signup"일 때 router.jsx에서 이 컴포넌트를 보여줍니다
+ */
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import { useAuth } from "@/auth";
+import { Input } from "@/components/ui";
 
 export default function SignupPage() {
   const { signUp } = useAuth();
   const [email, setEmail] = useState("");
-  const [pw, setPw] = useState("");
-  const [pw2, setPw2] = useState("");
-  const [err, setErr] = useState("");
-  const [done, setDone] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [isComplete, setIsComplete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [agree, setAgree] = useState(false);
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErr("");
+    setError("");
 
-    if (!agree) return setErr("약관에 동의해 주세요.");
-    if (pw !== pw2) return setErr("비밀번호가 일치하지 않습니다.");
-    if (pw.length < 8) return setErr("비밀번호는 8자 이상이어야 합니다.");
+    if (!agree) {
+      setError("약관에 동의해 주세요.");
+      return;
+    }
+    if (password !== passwordConfirm) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
 
     setLoading(true);
     try {
-      const { error } = await signUp(email, pw);
+      const { error } = await signUp(email, password);
       if (error) throw error;
-      setDone(true); // 인증 메일 안내 상태로 전환
+      setIsComplete(true);
     } catch {
-      setErr(
+      setError(
         "회원가입에 실패했습니다. 이메일을 바꾸거나 잠시 후 다시 시도해 주세요.",
       );
     } finally {
@@ -35,16 +58,16 @@ export default function SignupPage() {
     }
   };
 
-  if (done) {
+  if (isComplete) {
     return (
-      <div className={cn("mx-auto max-w-sm p-6")}>
-        <h1 className={cn("mb-3 text-xl font-semibold")}>회원가입 완료</h1>
-        <p className={cn("text-sm text-neutral-700 dark:text-neutral-300")}>
+      <div className="mx-auto max-w-sm p-6">
+        <h1 className="mb-3 text-xl font-semibold">회원가입 완료</h1>
+        <p className="text-sm text-neutral-700 dark:text-neutral-300">
           입력하신 주소로 <strong>인증 메일</strong>을 보냈어요. 메일함에서
           인증을 완료하신 후
-          <span className={cn("whitespace-nowrap")}> “로그인” </span>해 주세요.
+          <span className="whitespace-nowrap"> "로그인" </span>해 주세요.
         </p>
-        <Link to="/login" className={cn("mt-4 inline-block text-sm underline")}>
+        <Link to="/login" className="mt-4 inline-block text-sm underline">
           로그인 페이지로 이동
         </Link>
       </div>
@@ -52,40 +75,31 @@ export default function SignupPage() {
   }
 
   return (
-    <div className={cn("mx-auto max-w-sm p-6")}>
-      <h1 className={cn("mb-4 text-xl font-semibold")}>회원가입</h1>
-      <form onSubmit={onSubmit} className={cn("space-y-3")}>
-        <input
+    <div className="mx-auto max-w-sm p-6">
+      <h1 className="mb-4 text-xl font-semibold">회원가입</h1>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <Input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="이메일"
-          className={cn(
-            "w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50",
-          )}
         />
-        <input
+        <Input
           type="password"
           required
-          value={pw}
-          onChange={(e) => setPw(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="비밀번호 (8자 이상)"
-          className={cn(
-            "w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50",
-          )}
         />
-        <input
+        <Input
           type="password"
           required
-          value={pw2}
-          onChange={(e) => setPw2(e.target.value)}
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
           placeholder="비밀번호 확인"
-          className={cn(
-            "w-full rounded-md border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-50",
-          )}
         />
-        <label className={cn("flex items-center gap-2 text-sm")}>
+        <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={agree}
@@ -93,19 +107,18 @@ export default function SignupPage() {
           />
           <span>이용약관 및 개인정보 처리에 동의합니다.</span>
         </label>
-        {err && <p className={cn("text-sm text-red-500")}>{err}</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
         <button
+          type="submit"
           disabled={loading}
-          className={cn(
-            "inline-flex h-10 w-full items-center justify-center rounded-md border border-neutral-300 bg-neutral-900 text-white disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-200 dark:text-neutral-900",
-          )}
+          className="inline-flex h-10 w-full items-center justify-center rounded-md border border-neutral-300 bg-neutral-900 text-white disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-200 dark:text-neutral-900"
         >
           {loading ? "가입 중…" : "회원가입"}
         </button>
       </form>
-      <p className={cn("mt-3 text-sm text-neutral-600 dark:text-neutral-400")}>
+      <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
         이미 계정이 있으신가요?{" "}
-        <Link to="/login" className={cn("underline")}>
+        <Link to="/login" className="underline">
           로그인
         </Link>
       </p>

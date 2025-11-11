@@ -1,4 +1,4 @@
-import { TMDB_IMG_SRC, tmdbImgSrc } from "@/services/auth";
+import { TMDB_IMG_SRC, tmdbImgSrc } from "@/services/tmdb";
 import { cn } from "@/utils/cn.js";
 
 export default function Image({
