@@ -1,9 +1,6 @@
-import { cn } from "@/cn";
-import { Image } from "@/components";
-import Button from "@/components/Button.jsx";
-import Container from "@/components/Container.jsx";
-import Skeleton from "@/components/Skeleton.jsx";
-import { useDetail } from "@/features/movies/hooks/useDetail.js";
+import { Button, Container, Image, Skeleton } from "@/components/ui";
+import { useDetail } from "@/hooks/movies";
+import { cn } from "@/utils/cn";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 

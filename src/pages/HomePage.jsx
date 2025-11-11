@@ -1,6 +1,5 @@
-import { Container, Section } from "@/components";
-import { TopBanner } from "@/features/movies";
-import { Grid } from "@/features/movies/index";
+import { Container, Grid, Section } from "@/components/index.js";
+import { TopBanner } from "@/components/movies";
 
 export default function HomePage() {
   return (

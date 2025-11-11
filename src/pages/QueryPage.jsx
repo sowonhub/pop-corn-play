@@ -1,17 +1,13 @@
-import { cn } from "@/cn";
-import Container from "@/components//Container.jsx";
-import { useDebounce } from "@/components/hooks/useDebounce.js";
-import Section from "@/components/Section.jsx";
-import Skeleton from "@/components/Skeleton.jsx";
-import Card from "@/features/movies/Card.jsx";
-import { useQuery } from "@/features/movies/hooks/useQuery.js";
+import { Card } from "@/components/movies";
+import { Container, Section, Skeleton } from "@/components/ui";
+import { useQuery } from "@/hooks/movies";
+import { cn } from "@/utils/cn";
 import { useSearchParams } from "react-router-dom";
 
 export default function QueryPage() {
   const [params] = useSearchParams();
   const keyword = (params.get("keyword") || "").replace(/^"|"$/g, "").trim();
-  const debounced = useDebounce(keyword, 300);
-  const { data, loading, error } = useQuery(debounced);
+  const { data, loading, error } = useQuery();
 
   const list = data?.results ?? [];
 

@@ -1,5 +1,5 @@
-import { cn } from "@/cn";
 import { useAuth } from "@/Context.js";
+import { cn } from "@/utils/cn";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 

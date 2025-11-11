@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { Layout } from "@/layout";
+import { Layout } from "@/components/layout";
 
 import MovieDetailPage from "@/pages/DetailPage.jsx";
 import HomePage from "@/pages/HomePage.jsx";
@@ -19,7 +19,7 @@ import SignupPage from "@/pages/SignupPage.jsx";
 import {
   default as AuthProvider,
   default as useAuth,
-} from "@/api/auth/AuthProvider.jsx";
+} from "@/AuthProvider.jsx";
 
 export function RequireAuth({ children }) {
   const { user, busy } = useAuth();
