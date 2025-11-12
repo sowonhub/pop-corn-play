@@ -3,7 +3,7 @@
 import { useSearchParams } from "react-router-dom";
 
 import { Card } from "@/components/movies";
-import { Container, EmptyState, ErrorState, Section, Skeleton } from "@/components/ui";
+import { Container, EmptyState, ErrorState, Section, SectionHeader, Skeleton } from "@/components/ui";
 import { useQuery } from "@/hooks/movies";
 
 export default function QueryPage() {
@@ -15,7 +15,7 @@ export default function QueryPage() {
 
   return (
     <Container className="py-6 md:py-8 lg:py-10">
-      <Section title={keyword ? `검색 결과: ${keyword}` : "검색"}>
+      <Section header={<SectionHeader title={keyword ? `검색 결과: ${keyword}` : "검색"} />}>
         {loading ? (
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
             {Array.from({ length: 10 }).map((_, i) => (

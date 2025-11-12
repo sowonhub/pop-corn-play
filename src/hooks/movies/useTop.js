@@ -9,7 +9,7 @@ export default function useTop() {
   );
 
   return {
-    list: (data?.results ?? []).slice(0, 10),
+    data: (data?.results ?? []).slice(0, 10),
     loading,
     error,
   };
