@@ -1,21 +1,8 @@
-/**
- * [6-1-1단계] components/ui/SearchInput.jsx - 검색 입력 컴포넌트
- * 
- * 이 컴포넌트는:
- * 1. 검색어를 입력받습니다
- * 2. Enter를 누르면 검색 결과 페이지로 이동합니다
- * 
- * 실행 순서:
- * - Header 컴포넌트에서 이 컴포넌트를 사용합니다
- * 
- * 다음 단계:
- *   [9단계] pages/QueryPage.jsx (검색 결과 페이지로 이동)
- */
-
+// [6-1-1단계] 검색 입력 컴포넌트
+import { PATHS } from "@/router";
+import { cn } from "@/utils/cn";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-import { cn } from "@/utils/cn";
 
 export default function SearchInput({ compact = false }) {
   const [params] = useSearchParams();
@@ -31,8 +18,8 @@ export default function SearchInput({ compact = false }) {
     e.preventDefault();
     const trimmedQuery = query.trim();
     const url = trimmedQuery
-      ? `/search?keyword=${encodeURIComponent(trimmedQuery)}`
-      : "/";
+      ? `${PATHS.SEARCH}?keyword=${encodeURIComponent(trimmedQuery)}`
+      : PATHS.HOME;
     navigate(url);
   };
 

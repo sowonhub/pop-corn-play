@@ -1,23 +1,17 @@
-/**
- * [8단계] pages/DetailPage.jsx - 영화 상세 페이지 컴포넌트
- * 
- * 이 페이지는:
- * 1. URL에서 영화 ID를 가져옵니다 (/movie/123 → id = 123)
- * 2. 영화 상세 정보를 가져와서 보여줍니다
- * 3. 위시리스트 기능을 제공합니다
- * 
- * 실행 순서:
- * - URL이 "/movie/:id"일 때 router.jsx에서 이 컴포넌트를 보여줍니다
- * 
- * 다음 단계:
- *   [8-1단계] hooks/movies/useDetail.js (영화 상세 정보 가져오기)
- */
+// [8단계] 영화 상세 페이지 컴포넌트
 
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { Button, Container, ErrorState, Image, Skeleton } from "@/components/ui";
+import {
+  Button,
+  Container,
+  ErrorState,
+  Image,
+  Skeleton,
+} from "@/components/ui";
 import { useDetail } from "@/hooks/movies";
+import { PATHS } from "@/router";
 import { minToHM } from "@/utils/format";
 
 export default function DetailPage() {
@@ -50,7 +44,7 @@ export default function DetailPage() {
           onRetry={() => location.reload()}
         >
           <div className="mt-2">
-            <Link to="/">
+            <Link to={PATHS.HOME}>
               <Button>홈으로</Button>
             </Link>
           </div>
@@ -88,7 +82,7 @@ export default function DetailPage() {
       <Container className="max-w-5xl">
         <div className="pt-5">
           <Link
-            to="/"
+            to={PATHS.HOME}
             className="text-sm text-neutral-700 hover:underline dark:text-neutral-300"
           >
             ← 홈으로

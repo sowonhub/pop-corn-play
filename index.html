@@ -7,8 +7,11 @@
   <head>
     <script>
       try {
-        const t = localStorage.getItem("theme");
-        if (t === "dark") document.documentElement.classList.add("dark");
+        const THEME_KEY = "theme";
+        const THEME_DARK = "dark";
+        const t = localStorage.getItem(THEME_KEY);
+        if (t === THEME_DARK)
+          document.documentElement.classList.add(THEME_DARK);
       } catch {}
     </script>
 

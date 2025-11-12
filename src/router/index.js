@@ -1,4 +1,3 @@
-export { router } from "./router.jsx";
+export { PATHS } from "./paths.js";
 export { default as RequireAuth } from "./RequireAuth.jsx";
-export { ROUTES } from "./paths.js";
-
+export { router } from "./router.jsx";

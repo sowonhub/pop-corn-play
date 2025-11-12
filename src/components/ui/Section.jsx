@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn.js";
 import { useId } from "react";
 
-export default function section({
+export default function Section({
   title,
   titleDescription,
   className,

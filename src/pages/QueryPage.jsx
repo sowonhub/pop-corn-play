@@ -1,16 +1,4 @@
-/**
- * [9단계] pages/QueryPage.jsx - 검색 결과 페이지 컴포넌트
- * 
- * 이 페이지는:
- * 1. URL에서 검색어를 가져옵니다 (/search?keyword=영화)
- * 2. 검색 결과를 가져와서 보여줍니다
- * 
- * 실행 순서:
- * - URL이 "/search?keyword=..."일 때 router.jsx에서 이 컴포넌트를 보여줍니다
- * 
- * 다음 단계:
- *   [9-1단계] hooks/movies/useQuery.js (검색 결과 가져오기)
- */
+// [9단계] 검색 결과 페이지 컴포넌트
 
 import { useSearchParams } from "react-router-dom";
 

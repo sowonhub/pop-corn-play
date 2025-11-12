@@ -1,35 +1,17 @@
-/**
- * [7-1단계] components/movies/TopBanner.jsx - Top 10 영화 배너 컴포넌트
- * 
- * 이 컴포넌트는:
- * 1. 인기 영화 10개를 가져옵니다
- * 2. 4초마다 자동으로 다음 영화로 넘어갑니다
- * 3. 마우스를 올리면 자동 넘김을 멈춥니다
- * 
- * 실행 순서:
- * - HomePage에서 이 컴포넌트를 사용합니다
- * 
- * 다음 단계:
- *   [7-1-1단계] hooks/movies/useTop.js (영화 데이터 가져오기)
- */
-
+// [7-1단계] Top 10 영화 배너 컴포넌트
+import { useTop } from "@/hooks/movies";
+import { PATHS } from "@/router";
+import { getMovieImageUrl } from "@/services/movie-database";
+import { cn } from "@/utils/cn";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useTop } from "@/hooks/movies";
-import { ROUTES } from "@/router";
-import { tmdbImgSrc } from "@/services/tmdb";
-import { cn } from "@/utils/cn";
+const BANNER_AUTO_SLIDE_INTERVAL_MS = 4000;
 
-const INTERVAL_TIME = 4000; // 4초마다 자동 넘김
-
-// 이미지 URL 생성 함수
 const getImageUrl = (path, size = "w1280") =>
-  tmdbImgSrc(path, "backdrop", size);
+  getMovieImageUrl(path, "backdrop", size);
 
-// 다음 인덱스 계산 (마지막이면 처음으로)
 const getNextIndex = (i, len) => (i + 1) % len;
-// 이전 인덱스 계산 (처음이면 마지막으로)
 const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
@@ -43,7 +25,7 @@ export default function TopBanner() {
 
     timerRef.current = setInterval(
       () => setIndex((i) => getNextIndex(i, list.length)),
-      INTERVAL_TIME,
+      BANNER_AUTO_SLIDE_INTERVAL_MS,
     );
 
     return () => clearInterval(timerRef.current);
@@ -94,7 +76,7 @@ export default function TopBanner() {
         </p>
         <div className="mt-4 flex items-center gap-2">
           <Link
-            to={ROUTES.MOVIE(cur.id)}
+            to={PATHS.MOVIE(cur.id)}
             className="inline-flex h-10 items-center rounded-md bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900"
           >
             자세히 보기

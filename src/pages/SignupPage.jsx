@@ -1,15 +1,4 @@
-/**
- * [11단계] pages/SignupPage.jsx - 회원가입 페이지 컴포넌트
- * 
- * 이 페이지는:
- * 1. 이메일, 비밀번호, 비밀번호 확인을 입력받습니다
- * 2. 약관 동의를 받습니다
- * 3. 회원가입 버튼을 클릭하면 회원가입을 시도합니다
- * 4. 성공하면 인증 메일 안내를 보여줍니다
- * 
- * 실행 순서:
- * - URL이 "/signup"일 때 router.jsx에서 이 컴포넌트를 보여줍니다
- */
+// [11단계] 회원가입 페이지 컴포넌트
 
 import { useState } from "react";
 import { Link } from "react-router-dom";

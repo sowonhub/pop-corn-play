@@ -124,7 +124,7 @@ const { data, loading, error } = useFetch(
 3. `src/hooks/useFetch.js` - 커스텀 훅 만들기
 
 ### 4단계: API 호출 이해하기
-1. `src/services/tmdb/movies.js` - API 호출 함수
+1. `src/services/movie-database/movies.js` - API 호출 함수
 2. `src/hooks/movies/useDetail.js` - 훅에서 API 사용
 3. `src/pages/DetailPage.jsx` - 페이지에서 훅 사용
 
