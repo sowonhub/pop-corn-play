@@ -15,21 +15,21 @@ const getNextIndex = (i, len) => (i + 1) % len;
 const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
-  const { list, loading } = useTop();
+  const { data, loading } = useTop();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (loading || !list.length || paused) return;
+    if (loading || !data?.length || paused) return;
 
     timerRef.current = setInterval(
-      () => setIndex((i) => getNextIndex(i, list.length)),
+      () => setIndex((i) => getNextIndex(i, data.length)),
       BANNER_AUTO_SLIDE_INTERVAL_MS,
     );
 
     return () => clearInterval(timerRef.current);
-  }, [list.length, loading, paused]);
+  }, [data?.length, loading, paused]);
 
   if (loading) {
     return (
@@ -37,15 +37,15 @@ export default function TopBanner() {
     );
   }
 
-  if (!list.length) {
+  if (!data?.length) {
     return null;
   }
 
-  const cur = list[index];
+  const cur = data[index];
   const bg = getImageUrl(cur.backdrop_path || cur.poster_path);
 
-  const goPrev = () => setIndex((i) => getPrevIndex(i, list.length));
-  const goNext = () => setIndex((i) => getNextIndex(i, list.length));
+  const goPrev = () => setIndex((i) => getPrevIndex(i, data.length));
+  const goNext = () => setIndex((i) => getNextIndex(i, data.length));
 
   return (
     <section
@@ -66,7 +66,7 @@ export default function TopBanner() {
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
         <div className="mb-2 text-sm opacity-80">
-          Top 10 · {index + 1} / {list.length}
+          Top 10 · {index + 1} / {data.length}
         </div>
         <h2 className="line-clamp-2 text-2xl font-semibold md:text-4xl">
           {cur.title || cur.name}
@@ -102,7 +102,7 @@ export default function TopBanner() {
       </button>
 
       <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-        {list.map((_, i) => (
+        {data.map((_, i) => (
           <button
             key={i}
             onClick={() => setIndex(i)}
