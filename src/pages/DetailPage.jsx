@@ -10,13 +10,13 @@ import {
   Image,
   Skeleton,
 } from "@/components/ui";
-import { useDetail } from "@/hooks/movies";
+import { useMovieDetail } from "@/hooks/movies";
 import { PATHS } from "@/router";
 import { minToHM } from "@/utils/format";
 
 export default function DetailPage() {
   const { id } = useParams();
-  const { data: m, loading, error } = useDetail(Number(id));
+  const { data: m, loading, error } = useMovieDetail(Number(id));
   const [inWish, setInWish] = useState(false);
   const toggleWish = () => setInWish((v) => !v);
 

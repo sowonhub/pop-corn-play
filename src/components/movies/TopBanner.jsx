@@ -1,5 +1,5 @@
 // [7-1단계] Top 10 영화 배너 컴포넌트
-import { useTop } from "@/hooks/movies";
+import { useTopMovies } from "@/hooks/movies";
 import { PATHS } from "@/router";
 import { getMovieImageUrl } from "@/services/movie-database";
 import { cn } from "@/utils/cn";
@@ -16,7 +16,7 @@ const getNextIndex = (i, len) => (i + 1) % len;
 const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
-  const { data, loading } = useTop();
+  const { data, loading } = useTopMovies();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);

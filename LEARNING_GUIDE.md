@@ -104,7 +104,7 @@ const { data, loading, error } = useFetch(
 
 **어디서 볼 수 있나요?**
 - `src/hooks/useFetch.js` - API 호출 공통 로직
-- `src/hooks/movies/useDetail.js` - 영화 상세 정보 가져오기
+- `src/hooks/movies/useMovieDetail.js` - 영화 상세 정보 가져오기
 
 ## 📚 단계별 학습 순서
 
@@ -125,7 +125,7 @@ const { data, loading, error } = useFetch(
 
 ### 4단계: API 호출 이해하기
 1. `src/services/movie-database/movies.js` - API 호출 함수
-2. `src/hooks/movies/useDetail.js` - 훅에서 API 사용
+2. `src/hooks/movies/useMovieDetail.js` - 훅에서 API 사용
 3. `src/pages/DetailPage.jsx` - 페이지에서 훅 사용
 
 ## 💡 자주 묻는 질문

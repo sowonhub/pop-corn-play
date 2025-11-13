@@ -9,16 +9,16 @@
  * - HomePage에서 이 컴포넌트를 사용합니다
  * 
  * 다음 단계:
- *   [7-2-1단계] hooks/movies/usePopular.js (영화 데이터 가져오기)
+ *   [7-2-1단계] hooks/movies/usePopularMovies.js (영화 데이터 가져오기)
  *   [7-2-2단계] components/movies/Card.jsx (각 영화 카드)
  */
 
 import { Card } from "@/components/movies";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui";
-import { usePopular } from "@/hooks/movies";
+import { usePopularMovies } from "@/hooks/movies";
 
 export default function Grid() {
-  const { data, loading, error } = usePopular();
+  const { data, loading, error } = usePopularMovies();
 
   if (loading) {
     return (
