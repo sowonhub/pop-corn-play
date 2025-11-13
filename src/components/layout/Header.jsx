@@ -8,14 +8,14 @@ export default function Header() {
   const { user, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
+    <header className="sticky top-0 z-40 border-b-2 border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
       <Container className="px-4">
         <div className="flex h-12 items-center justify-between gap-3 sm:h-14">
           <Link
             to={PATHS.HOME}
-            className="shrink-0 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100"
+            className="shrink-0 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100"
           >
-            🎬 Mini Movies
+            🎬 Popcorn Play 🍿
           </Link>
 
           <div className="hidden max-w-xl flex-1 sm:block">

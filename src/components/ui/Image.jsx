@@ -1,8 +1,6 @@
-import {
-  MOVIE_IMAGE_CONFIG,
-  getMovieImageUrl,
-} from "@/services/movie-database";
+import useImageLoading from "@/hooks/useImageLoading";
 import { cn } from "@/utils/cn.js";
+import Skeleton from "./Skeleton.jsx";
 
 export default function Image({
   src,
@@ -10,24 +8,34 @@ export default function Image({
   type = "poster",
   size,
   className,
+  showSkeleton = true,
   ...rest
 }) {
-  const onError = (e) => {
-    if (e?.currentTarget) {
-      e.currentTarget.src = MOVIE_IMAGE_CONFIG.NO_IMAGE;
-      e.currentTarget.onerror = null;
-    }
-  };
+  const { imageSrc, loading, handleLoad, handleError } = useImageLoading(
+    src,
+    type,
+    size,
+  );
 
   return (
-    <img
-      loading="lazy"
-      decoding="async"
-      src={getMovieImageUrl(src, type, size)}
-      alt={alt}
-      onError={onError}
-      className={cn("block h-auto max-w-full", className)}
-      {...rest}
-    />
+    <div className="relative">
+      {loading && showSkeleton && (
+        <Skeleton className="absolute inset-0 rounded-md" />
+      )}
+      <img
+        loading="lazy"
+        decoding="async"
+        src={imageSrc}
+        alt={alt}
+        onLoad={handleLoad}
+        onError={handleError}
+        className={cn(
+          "block h-auto max-w-full",
+          loading && showSkeleton && "opacity-0",
+          className,
+        )}
+        {...rest}
+      />
+    </div>
   );
 }

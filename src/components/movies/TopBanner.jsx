@@ -5,6 +5,7 @@ import { getMovieImageUrl } from "@/services/movie-database";
 import { cn } from "@/utils/cn";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import TopBannerSkeleton from "./TopBannerSkeleton.jsx";
 
 const BANNER_AUTO_SLIDE_INTERVAL_MS = 4000;
 
@@ -32,9 +33,7 @@ export default function TopBanner() {
   }, [data?.length, loading, paused]);
 
   if (loading) {
-    return (
-      <div className="aspect-video w-full animate-pulse rounded-xl bg-neutral-100 dark:bg-neutral-900" />
-    );
+    return <TopBannerSkeleton />;
   }
 
   if (!data?.length) {
