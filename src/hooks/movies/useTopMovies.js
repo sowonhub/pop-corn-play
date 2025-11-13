@@ -1,10 +1,10 @@
 // [7-1-1단계] 인기 영화 데이터를 가져오는 훅
-import { getTrendingMovies } from "@/services/movie-database";
+import { getTopMovies } from "@/services/movie-database";
 import useFetch from "../useFetch.js";
 
-export default function useTop() {
+export default function useTopMovies() {
   const { data, loading, error } = useFetch(
-    ({ signal }) => getTrendingMovies({ signal }),
+    ({ signal }) => getTopMovies({ signal }),
     [],
   );
 

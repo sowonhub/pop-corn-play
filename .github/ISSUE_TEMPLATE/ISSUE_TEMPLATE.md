@@ -1,18 +1,7 @@
-## 배경
+## 어떤 기능인가요?
 
 >
 
-## 작업 항목
+## 작업 내용
 
-- [ ]
-- [ ]
-- [ ]
-
-## 브랜치명
-
-`TYPE-SCOPE-NUMBER-VERB--`
-
-## ✅ 시작 전, 체크!
-
-- [ ] ISSUE-NUMBER-? = #
-- [ ] same-NUMBER-with-BRANCH-?
+-

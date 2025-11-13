@@ -2,7 +2,7 @@
 import { getMovieDetail } from "@/services/movie-database";
 import useFetch from "../useFetch.js";
 
-export default function useDetail(id) {
+export default function useMovieDetail(id) {
   const { data, loading, error } = useFetch(
     ({ signal }) => getMovieDetail(id, { signal }),
     [id],

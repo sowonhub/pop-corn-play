@@ -4,12 +4,12 @@ import { useSearchParams } from "react-router-dom";
 
 import { Card } from "@/components/movies";
 import { Container, EmptyState, ErrorState, Section, SectionHeader, Skeleton } from "@/components/ui";
-import { useQuery } from "@/hooks/movies";
+import { useMovieSearch } from "@/hooks/movies";
 
 export default function QueryPage() {
   const [params] = useSearchParams();
   const keyword = (params.get("keyword") || "").replace(/^"|"$/g, "").trim();
-  const { data, loading, error } = useQuery(keyword);
+  const { data, loading, error } = useMovieSearch(keyword);
 
   const list = data?.results ?? [];
 
