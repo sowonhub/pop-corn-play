@@ -26,6 +26,7 @@ export const MOVIE_IMAGE_CONFIG = {
 
 const DEFAULT_LANGUAGE = "ko-KR";
 const DEFAULT_ACCEPT_HEADER = "application/json";
+const HTTP_URL_PATTERN = /^https?:\/\//;
 
 export const EMPTY_SEARCH_RESULT = {
   results: [],
@@ -37,20 +38,38 @@ export const EMPTY_SEARCH_RESULT = {
 export function buildMovieApiUrl(path, params = {}) {
   const url = new URL(`${MOVIE_API_CONFIG.BASE}${path}`);
   url.searchParams.set("api_key", MOVIE_API_CONFIG.KEY);
+
   Object.entries(params).forEach(([key, value]) => {
-    if (value == null) return;
-    const stringValue =
-      typeof value === "string" ? value.trim() : String(value);
-    if (stringValue !== "") url.searchParams.set(key, stringValue);
+    const isValueNull = value == null;
+    if (isValueNull) return;
+
+    const isStringValue = typeof value === "string";
+    const stringValue = isStringValue ? value.trim() : String(value);
+    const isNotEmpty = stringValue !== "";
+
+    if (isNotEmpty) {
+      url.searchParams.set(key, stringValue);
+    }
   });
+
   return url.toString();
 }
 
 export function getMovieImageUrl(path, type = "poster", size) {
-  if (!path) return MOVIE_IMAGE_CONFIG.NO_IMAGE;
-  if (/^https?:\/\//.test(path)) return path;
-  const imageSize =
-    size || MOVIE_IMAGE_CONFIG.SIZE[type] || MOVIE_IMAGE_CONFIG.SIZE.poster;
+  const hasNoPath = !path;
+  if (hasNoPath) return MOVIE_IMAGE_CONFIG.NO_IMAGE;
+
+  const isExternalUrl = HTTP_URL_PATTERN.test(path);
+  if (isExternalUrl) return path;
+
+  const hasCustomSize = size != null;
+  const hasValidTypeSize = MOVIE_IMAGE_CONFIG.SIZE[type] != null;
+  const imageSize = hasCustomSize
+    ? size
+    : hasValidTypeSize
+      ? MOVIE_IMAGE_CONFIG.SIZE[type]
+      : MOVIE_IMAGE_CONFIG.SIZE.poster;
+
   return `${MOVIE_IMAGE_CONFIG.BASE}${imageSize}${path}`;
 }
 
