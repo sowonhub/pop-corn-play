@@ -1,26 +1,13 @@
-/**
- * [7-2단계] components/ui/Grid.jsx - 영화 그리드 컴포넌트
- * 
- * 이 컴포넌트는:
- * 1. 인기 영화 목록을 가져옵니다
- * 2. 영화 카드들을 그리드 형태로 보여줍니다
- * 
- * 실행 순서:
- * - HomePage에서 이 컴포넌트를 사용합니다
- * 
- * 다음 단계:
- *   [7-2-1단계] hooks/movies/usePopularMovies.js (영화 데이터 가져오기)
- *   [7-2-2단계] components/movies/Card.jsx (각 영화 카드)
- */
+// [5-2단계] 영화 그리드 컴포넌트 - 인기 영화 목록 표시
 
 import { Card } from "@/components/movies";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui";
 import { usePopularMovies } from "@/hooks/movies";
 
 export default function Grid() {
-  const { data, loading, error } = usePopularMovies();
+  const { data, isLoading, error } = usePopularMovies();
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (

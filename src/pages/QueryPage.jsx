@@ -1,4 +1,4 @@
-// [9단계] 검색 결과 페이지 컴포넌트
+// [5-4단계] 검색 결과 페이지 컴포넌트 - 영화 검색 결과 표시
 
 import { useSearchParams } from "react-router-dom";
 
@@ -9,14 +9,14 @@ import { useMovieSearch } from "@/hooks/movies";
 export default function QueryPage() {
   const [params] = useSearchParams();
   const keyword = (params.get("keyword") || "").replace(/^"|"$/g, "").trim();
-  const { data, loading, error } = useMovieSearch(keyword);
+  const { data, isLoading, error } = useMovieSearch(keyword);
 
   const list = data?.results ?? [];
 
   return (
     <Container className="py-6 md:py-8 lg:py-10">
       <Section header={<SectionHeader title={keyword ? `검색 결과: ${keyword}` : "검색"} />}>
-        {loading ? (
+        {isLoading ? (
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
             {Array.from({ length: 10 }).map((_, i) => (
               <div

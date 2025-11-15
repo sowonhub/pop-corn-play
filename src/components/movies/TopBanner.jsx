@@ -1,4 +1,4 @@
-// [7-1단계] Top 10 영화 배너 컴포넌트
+// [5-1단계] Top 10 영화 배너 컴포넌트 - 트렌딩 영화 표시
 import { useTopMovies } from "@/hooks/movies";
 import { PATHS } from "@/router";
 import { getMovieImageUrl } from "@/services/movie-database";
@@ -16,13 +16,13 @@ const getNextIndex = (i, len) => (i + 1) % len;
 const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
-  const { data, loading } = useTopMovies();
+  const { data, isLoading } = useTopMovies();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (loading || !data?.length || paused) return;
+    if (isLoading || !data?.length || paused) return;
 
     timerRef.current = setInterval(
       () => setIndex((i) => getNextIndex(i, data.length)),
@@ -30,9 +30,9 @@ export default function TopBanner() {
     );
 
     return () => clearInterval(timerRef.current);
-  }, [data?.length, loading, paused]);
+  }, [data?.length, isLoading, paused]);
 
-  if (loading) {
+  if (isLoading) {
     return <TopBannerSkeleton />;
   }
 

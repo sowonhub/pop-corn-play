@@ -1,16 +1,17 @@
-// [8-1단계] 영화 상세 정보를 가져오는 커스텀 훅
+// [4-4단계] 영화 상세 정보 조회 훅 - React Query로 상태 관리 (조건부 실행)
+import { useQuery } from "@tanstack/react-query";
 import { getMovieDetail } from "@/services/movie-database";
-import useFetch from "../useFetch.js";
 
 export default function useMovieDetail(id) {
-  const { data, loading, error } = useFetch(
-    ({ signal }) => getMovieDetail(id, { signal }),
-    [id],
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["movieDetail", id],
+    queryFn: ({ signal }) => getMovieDetail(id, { signal }),
+    enabled: Boolean(id),
+  });
 
   if (!id) {
-    return { data: null, loading: false, error: null };
+    return { data: null, isLoading: false, error: null };
   }
 
-  return { data, loading, error };
+  return { data, isLoading, error };
 }

@@ -1,4 +1,4 @@
-// [8단계] 영화 상세 페이지 컴포넌트
+// [5-3단계] 영화 상세 페이지 컴포넌트 - 영화 상세 정보 표시
 
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -16,11 +16,11 @@ import { minToHM } from "@/utils/format";
 
 export default function DetailPage() {
   const { id } = useParams();
-  const { data: m, loading, error } = useMovieDetail(Number(id));
+  const { data: m, isLoading, error } = useMovieDetail(Number(id));
   const [inWish, setInWish] = useState(false);
   const toggleWish = () => setInWish((v) => !v);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Container className="max-w-5xl py-8 md:py-10">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[260px_1fr] lg:grid-cols-[320px_1fr]">

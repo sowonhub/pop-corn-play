@@ -1,16 +1,16 @@
-// [7-1-1단계] 인기 영화 데이터를 가져오는 훅
+// [4-2단계] 트렌딩 영화 데이터 조회 훅 - React Query로 상태 관리
+import { useQuery } from "@tanstack/react-query";
 import { getTopMovies } from "@/services/movie-database";
-import useFetch from "../useFetch.js";
 
 export default function useTopMovies() {
-  const { data, loading, error } = useFetch(
-    ({ signal }) => getTopMovies({ signal }),
-    [],
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["topMovies"],
+    queryFn: ({ signal }) => getTopMovies({ signal }),
+  });
 
   return {
     data: (data?.results ?? []).slice(0, 10),
-    loading,
+    isLoading,
     error,
   };
 }
