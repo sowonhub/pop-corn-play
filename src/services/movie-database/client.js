@@ -24,18 +24,38 @@ export const movieApiClient = axios.create({
   },
 });
 
-// [2-2] 요청 인터셉터 - 빈 값 파라미터 자동 제거
-movieApiClient.interceptors.request.use((config) => {
-  if (config.params) {
-    Object.keys(config.params).forEach((key) => {
-      const value = config.params[key];
-      if (value == null || (typeof value === "string" && value.trim() === "")) {
-        delete config.params[key];
-      }
-    });
-  }
-  return config;
-});
+// [2-2] 요청 인터셉터 - 빈 값 파라미터 자동 제거 및 placeholder 값 체크
+movieApiClient.interceptors.request.use(
+  (config) => {
+    if (config.params) {
+      Object.keys(config.params).forEach((key) => {
+        const value = config.params[key];
+        if (value == null || (typeof value === "string" && value.trim() === "")) {
+          delete config.params[key];
+        }
+      });
+    }
+
+    // 개발 모드에서 placeholder 값이면 요청을 차단
+    const isDev = import.meta.env.DEV;
+    const apiKey = ENV.MOVIE_DATABASE_API.API_KEY;
+    if (
+      isDev &&
+      (apiKey.includes("your_") || !apiKey || apiKey.trim() === "")
+    ) {
+      return Promise.reject(
+        new Error(
+          "Movie Database API key is not set. Please set VITE_MOVIE_DATABASE_API_KEY in .env file",
+        ),
+      );
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 // [2-3] 응답 인터셉터 - 에러 처리 및 데이터 추출
 movieApiClient.interceptors.response.use(

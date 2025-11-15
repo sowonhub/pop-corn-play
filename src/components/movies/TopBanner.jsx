@@ -16,7 +16,7 @@ const getNextIndex = (i, len) => (i + 1) % len;
 const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
-  const { data, isLoading } = useTopMovies();
+  const { data, isLoading, error } = useTopMovies();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
@@ -36,7 +36,8 @@ export default function TopBanner() {
     return <TopBannerSkeleton />;
   }
 
-  if (!data?.length) {
+  // 에러가 발생하면 배너를 표시하지 않음 (Grid 컴포넌트에서 에러 메시지 표시)
+  if (error || !data?.length) {
     return null;
   }
 
@@ -61,7 +62,7 @@ export default function TopBanner() {
         className="absolute inset-0 h-full w-full object-cover"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
         <div className="mb-2 text-sm opacity-80">

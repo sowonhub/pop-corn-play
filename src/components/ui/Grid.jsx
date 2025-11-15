@@ -27,10 +27,19 @@ export default function Grid() {
   }
 
   if (error) {
+    // API 키가 설정되지 않은 경우 더 명확한 메시지 표시
+    const isApiKeyError =
+      error?.message?.includes("API key is not set") ||
+      error?.message?.includes("placeholder");
+    
+    const errorMessage = isApiKeyError
+      ? "영화 데이터를 불러오려면 .env 파일에 VITE_MOVIE_DATABASE_API_KEY를 설정해주세요."
+      : "불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+
     return (
       <ErrorState
-        message="불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        onRetry={() => location.reload()}
+        message={errorMessage}
+        onRetry={isApiKeyError ? undefined : () => location.reload()}
       />
     );
   }

@@ -75,7 +75,7 @@ export default function DetailPage() {
             className="w-full object-cover"
           />
         )}
-        <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/60 to-black/80 dark:from-neutral-900/60 dark:via-neutral-950 dark:to-neutral-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 dark:from-neutral-900/60 dark:via-neutral-950 dark:to-neutral-950" />
         <div className="absolute inset-0 backdrop-blur-[6px]" />
       </div>
 
