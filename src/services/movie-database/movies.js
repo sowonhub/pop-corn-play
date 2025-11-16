@@ -45,8 +45,16 @@ export function getMovieImageUrl(path, type = "poster", size) {
   return `${MOVIE_IMAGE_CONFIG.BASE}${imageSize}${path}`;
 }
 
-export async function getMovieDetail(id, { signal } = {}) {
+const DEFAULT_MOVIE_DETAIL_APPEND = "videos";
+
+export async function getMovieDetail(
+  id,
+  { signal, appendToResponse = DEFAULT_MOVIE_DETAIL_APPEND } = {},
+) {
   return movieApiClient.get(MOVIE_API_ENDPOINTS.MOVIE_DETAIL(id), {
+    params: {
+      append_to_response: appendToResponse,
+    },
     signal,
   });
 }

@@ -34,6 +34,7 @@ export default function Image({
           loading && showSkeleton && "opacity-0",
           className,
         )}
+        draggable={false}
         {...rest}
       />
     </div>

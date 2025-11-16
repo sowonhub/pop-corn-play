@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "mini-project.wishlist";
+const listeners = new Set();
+let storageListenerRegistered = false;
 
 const readStoredWishlist = () => {
   if (typeof window === "undefined") return [];
@@ -24,23 +26,67 @@ const normalizeMovie = (movie) => ({
   release_date: movie?.release_date,
 });
 
+let globalWishlist = readStoredWishlist();
+
+const persistWishlist = (nextItems) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextItems));
+  } catch {
+    // ignore serialization errors
+  }
+};
+
+const notifyListeners = () => {
+  listeners.forEach((listener) => listener(globalWishlist));
+};
+
+const handleStorageEvent = (event) => {
+  if (event.key !== STORAGE_KEY) return;
+  globalWishlist = readStoredWishlist();
+  notifyListeners();
+};
+
+const registerStorageListener = () => {
+  if (storageListenerRegistered || typeof window === "undefined") return;
+  window.addEventListener("storage", handleStorageEvent);
+  storageListenerRegistered = true;
+};
+
+const updateGlobalWishlist = (updater) => {
+  const nextItems =
+    typeof updater === "function" ? updater(globalWishlist) : updater;
+
+  if (nextItems === globalWishlist) return;
+
+  globalWishlist = nextItems;
+  persistWishlist(globalWishlist);
+  notifyListeners();
+};
+
 export default function useWishlist() {
-  const [items, setItems] = useState(() => readStoredWishlist());
+  const [items, setItems] = useState(() => globalWishlist);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    registerStorageListener();
 
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      // ignore serialization errors
-    }
-  }, [items]);
+    const handleChange = (nextItems) => {
+      setItems(nextItems);
+    };
+
+    listeners.add(handleChange);
+    setItems(globalWishlist);
+
+    return () => {
+      listeners.delete(handleChange);
+    };
+  }, []);
 
   const add = useCallback((movie) => {
     if (!movie || movie.id == null) return;
 
-    setItems((prev) => {
+    updateGlobalWishlist((prev) => {
       if (prev.some((item) => item.id === movie.id)) return prev;
       return [...prev, normalizeMovie(movie)];
     });
@@ -49,13 +95,13 @@ export default function useWishlist() {
   const remove = useCallback((movieId) => {
     if (movieId == null) return;
 
-    setItems((prev) => prev.filter((item) => item.id !== movieId));
+    updateGlobalWishlist((prev) => prev.filter((item) => item.id !== movieId));
   }, []);
 
   const toggle = useCallback((movie) => {
     if (!movie || movie.id == null) return;
 
-    setItems((prev) => {
+    updateGlobalWishlist((prev) => {
       const exists = prev.some((item) => item.id === movie.id);
       if (exists) {
         return prev.filter((item) => item.id !== movie.id);

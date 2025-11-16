@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import {
   Button,
@@ -9,10 +9,14 @@ import {
 } from "@/components/ui";
 import { useMovieDetail } from "@/hooks/movies";
 import useWishlist from "@/hooks/useWishlist";
-import { PATHS } from "@/router";
 import { minToHM } from "@/utils/format";
 
+const TRAILER_TYPE = "Trailer";
+const TRAILER_SITE = "YouTube";
+const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch";
+
 export default function DetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data: m, isLoading, error } = useMovieDetail(Number(id));
   const { toggle, contains } = useWishlist();
@@ -47,9 +51,7 @@ export default function DetailPage() {
           onRetry={() => location.reload()}
         >
           <div className="mt-2">
-            <Link to={PATHS.HOME}>
-              <Button>홈으로</Button>
-            </Link>
+            <Button onClick={() => navigate(-1)}>이전 페이지로</Button>
           </div>
         </ErrorState>
       </Container>
@@ -65,31 +67,48 @@ export default function DetailPage() {
     .filter(Boolean)
     .join(" · ");
 
+  const trailerResults = m.videos?.results ?? [];
+  const trailerVideo = trailerResults.find((video) => {
+    const key = video?.key?.trim();
+    return (
+      video?.type === TRAILER_TYPE &&
+      video?.site === TRAILER_SITE &&
+      Boolean(key)
+    );
+  });
+  const trailerUrl =
+    trailerVideo?.key?.trim()?.length > 0
+      ? `${YOUTUBE_WATCH_URL}?v=${encodeURIComponent(trailerVideo.key)}`
+      : null;
+  const hasTrailer = Boolean(trailerUrl);
+  const handleWatchTrailer = () => {
+    if (!hasTrailer || typeof window === "undefined") {
+      return;
+    }
+
+    const openedWindow = window.open(
+      trailerUrl,
+      "_blank",
+      "noopener,noreferrer",
+    );
+    if (openedWindow) {
+      openedWindow.focus();
+    }
+  };
+
   return (
     <div className="relative">
-      <div className="absolute inset-0 -z-10">
-        {(m.backdrop_path || m.poster_path) && (
-          <Image
-            src={m.backdrop_path || m.poster_path}
-            type={m.backdrop_path ? "backdrop" : "poster"}
-            alt={`${m.title} backdrop`}
-            width={1280}
-            height={720}
-            className="w-full object-cover"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 dark:from-neutral-900/60 dark:via-neutral-950 dark:to-neutral-950" />
-        <div className="absolute inset-0 backdrop-blur-[6px]" />
-      </div>
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-black/5 via-black/10 to-black/40 dark:from-neutral-900/60 dark:via-neutral-950/20 dark:to-neutral-950/80" />
 
       <Container className="max-w-5xl">
         <div className="pt-5">
-          <Link
-            to={PATHS.HOME}
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
             className="text-sm text-neutral-700 hover:underline dark:text-neutral-300"
           >
-            ← 홈으로
-          </Link>
+            ← 이전 페이지로
+          </button>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-[260px_1fr] lg:grid-cols-[320px_1fr]">
@@ -135,7 +154,15 @@ export default function DetailPage() {
             </div>
 
             <div className="mt-6 flex gap-2">
-              <Button className="h-10 border border-transparent bg-neutral-900 px-4 text-white transition-none hover:bg-neutral-900 hover:text-white dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-100 dark:hover:text-neutral-900">
+              <Button
+                type="button"
+                onClick={handleWatchTrailer}
+                disabled={!hasTrailer}
+                title={
+                  !hasTrailer ? "예고편 정보를 찾을 수 없습니다." : undefined
+                }
+                className="h-10 rounded-xl border border-transparent bg-neutral-900 px-4 text-white transition-none hover:bg-neutral-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
+              >
                 예고편 보기
               </Button>
 
@@ -144,7 +171,7 @@ export default function DetailPage() {
                 aria-label={inWish ? "위시리스트에서 제거" : "위시리스트 추가"}
                 aria-pressed={inWish}
                 onClick={toggleWish}
-                className="h-10 border border-neutral-300 bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
+                className="h-10 rounded-xl border border-neutral-300 bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
               >
                 위시리스트
               </Button>
