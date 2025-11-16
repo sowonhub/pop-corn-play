@@ -1,6 +1,5 @@
-// [6-1단계] 헤더 컴포넌트
 import { useAuth } from "@/auth";
-import { Container, SearchInput } from "@/components/ui/index.js";
+import { Container, SearchInput } from "@/components/ui";
 import { PATHS } from "@/router";
 import { Link } from "react-router-dom";
 

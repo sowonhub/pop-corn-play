@@ -1,5 +1,3 @@
-// [5-2단계] 영화 그리드 컴포넌트 - 인기 영화 목록 표시
-
 import { Card } from "@/components/movies";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui";
 import { usePopularMovies } from "@/hooks/movies";
@@ -27,7 +25,6 @@ export default function Grid() {
   }
 
   if (error) {
-    // API 키가 설정되지 않은 경우 더 명확한 메시지 표시
     const isApiKeyError =
       error?.message?.includes("API key is not set") ||
       error?.message?.includes("placeholder");

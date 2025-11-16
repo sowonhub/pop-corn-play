@@ -1,11 +1,10 @@
-// [5-2단계] 라우터 설정
-import { createBrowserRouter } from "react-router-dom";
 import { Layout } from "@/components/layout";
 import DetailPage from "@/pages/DetailPage.jsx";
 import HomePage from "@/pages/HomePage.jsx";
 import LoginPage from "@/pages/LoginPage.jsx";
 import QueryPage from "@/pages/QueryPage.jsx";
 import SignupPage from "@/pages/SignupPage.jsx";
+import { createBrowserRouter } from "react-router-dom";
 import RequireAuth from "./RequireAuth.jsx";
 
 export const router = createBrowserRouter([
@@ -32,4 +31,3 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
-

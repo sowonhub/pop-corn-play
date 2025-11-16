@@ -1,4 +1,3 @@
-// 이미지 로딩 상태를 관리하는 커스텀 훅
 import {
   getMovieImageUrl,
   MOVIE_IMAGE_CONFIG,

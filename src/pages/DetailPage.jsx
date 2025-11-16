@@ -1,5 +1,3 @@
-// [5-3단계] 영화 상세 페이지 컴포넌트 - 영화 상세 정보 표시
-
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 

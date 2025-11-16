@@ -1,4 +1,3 @@
-// [7-2-2단계] 영화 카드 컴포넌트
 import { Image } from "@/components/ui";
 import { PATHS } from "@/router";
 import { Link } from "react-router-dom";

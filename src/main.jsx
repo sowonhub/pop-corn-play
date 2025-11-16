@@ -1,4 +1,3 @@
-// [1단계] 앱 진입점 - React Query Provider 설정
 import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -9,7 +8,7 @@ import { AuthProvider } from "./auth";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5분
+      staleTime: 1000 * 60 * 5,
       refetchOnWindowFocus: false,
     },
   },

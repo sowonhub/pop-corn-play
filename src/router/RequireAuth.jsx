@@ -1,6 +1,5 @@
-// [5-3단계] 인증이 필요한 페이지를 보호하는 컴포넌트
-import { Navigate } from "react-router-dom";
 import { useAuth } from "@/auth";
+import { Navigate } from "react-router-dom";
 
 export default function RequireAuth({ children }) {
   const { user, busy } = useAuth();

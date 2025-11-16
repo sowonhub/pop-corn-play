@@ -1,5 +1,3 @@
-// [4-3단계] 영화 검색 데이터 조회 훅 - React Query로 상태 관리 (조건부 실행)
-// 주의: useQuery는 React Query의 훅 이름, searchKeyword는 검색어를 의미
 import { useQuery } from "@tanstack/react-query";
 import { EMPTY_SEARCH_RESULT, getMovieSearch } from "@/services/movie-database";
 

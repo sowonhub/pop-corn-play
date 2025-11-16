@@ -1,4 +1,3 @@
-// [3-3단계] 인증 상태를 관리하는 Provider 컴포넌트
 import { useEffect, useState } from "react";
 import { ENV } from "@/config/env";
 import { authClient } from "./client.js";
@@ -11,14 +10,12 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true;
 
-    // 개발 모드에서 placeholder 값이면 인증 기능을 건너뜀
     const isDev = import.meta.env.DEV;
     const hasPlaceholder =
       ENV.AUTH_DATABASE.URL.includes("your_") ||
       ENV.AUTH_DATABASE.ANON_KEY.includes("your_");
 
     if (isDev && hasPlaceholder) {
-      // 개발 모드에서 placeholder 값이면 인증 없이 진행
       setUser(null);
       setBusy(false);
       return;
@@ -29,7 +26,6 @@ export default function AuthProvider({ children }) {
       setUser(data.session?.user ?? null);
       setBusy(false);
     }).catch(() => {
-      // 에러 발생 시에도 앱이 계속 실행되도록
       if (!mounted) return;
       setUser(null);
       setBusy(false);

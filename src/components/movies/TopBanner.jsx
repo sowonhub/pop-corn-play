@@ -1,4 +1,3 @@
-// [5-1단계] Top 10 영화 배너 컴포넌트 - 트렌딩 영화 표시
 import { useTopMovies } from "@/hooks/movies";
 import { PATHS } from "@/router";
 import { getMovieImageUrl } from "@/services/movie-database";
@@ -36,7 +35,6 @@ export default function TopBanner() {
     return <TopBannerSkeleton />;
   }
 
-  // 에러가 발생하면 배너를 표시하지 않음 (Grid 컴포넌트에서 에러 메시지 표시)
   if (error || !data?.length) {
     return null;
   }

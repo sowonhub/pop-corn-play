@@ -1,5 +1,3 @@
-// [5-4단계] 검색 결과 페이지 컴포넌트 - 영화 검색 결과 표시
-
 import { useSearchParams } from "react-router-dom";
 
 import { Card } from "@/components/movies";

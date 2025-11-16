@@ -1,4 +1,3 @@
-// [6-1-1단계] 검색 입력 컴포넌트
 import { PATHS } from "@/router";
 import { cn } from "@/utils/cn";
 import { useEffect, useState } from "react";

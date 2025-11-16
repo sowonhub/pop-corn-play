@@ -1,5 +1,5 @@
 import useImageLoading from "@/hooks/useImageLoading";
-import { cn } from "@/utils/cn.js";
+import { cn } from "@/utils/cn";
 import Skeleton from "./Skeleton.jsx";
 
 export default function Image({

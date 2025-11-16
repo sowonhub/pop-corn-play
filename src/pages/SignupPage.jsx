@@ -1,5 +1,3 @@
-// [11단계] 회원가입 페이지 컴포넌트
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 

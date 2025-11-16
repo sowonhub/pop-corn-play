@@ -1,4 +1,3 @@
-// [6단계] 레이아웃 컴포넌트
 import { Header } from "@/components/layout";
 import { Outlet } from "react-router-dom";
 

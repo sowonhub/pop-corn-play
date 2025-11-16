@@ -1,4 +1,3 @@
-// [10단계] 로그인 페이지 컴포넌트
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth";
