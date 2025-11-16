@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth";
 import { Input } from "@/components/ui";
 import { PATHS } from "@/router";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const { login } = useAuth();

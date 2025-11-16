@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn";
 
 export default function Section({ header, className, children }) {
   return (
-    <section className={cn("mb-8 md:mb-10", className)}>
+    <section className={cn("mb-8", className)}>
       {header && (
         <div className="mb-4 flex items-end justify-between gap-3">
           {header}
@@ -29,7 +29,7 @@ export function SectionHeader({ title, description, children, className }) {
     return (
       <div className={cn("flex items-end justify-between gap-3", className)}>
         {title && (
-          <h2 className="text-xl font-semibold text-neutral-900 md:text-2xl dark:text-neutral-100">
+          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
             {title}
           </h2>
         )}
