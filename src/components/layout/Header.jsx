@@ -4,7 +4,7 @@ import { PATHS } from "@/router";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   // const navigate = useNavigate();
 
   return (
@@ -30,15 +30,12 @@ export default function Header() {
           <div className="flex items-center gap-2">
             {user ? (
               <div className="flex shrink-0 items-center gap-2">
-                <span className="hidden shrink-0 text-sm text-neutral-600 sm:inline dark:text-neutral-400">
-                  {user.email}
-                </span>
-                <button
-                  onClick={logout}
-                  className="rounded-md px-3 py-1.5 text-sm whitespace-nowrap text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                <Link
+                  to={PATHS.MYPAGE}
+                  className="rounded-full border border-red-600 px-2.5 py-1 font-bold whitespace-nowrap text-red-600 hover:bg-red-100 dark:text-red-600 dark:hover:bg-red-950"
                 >
-                  로그아웃
-                </button>
+                  {user.email[0]?.toUpperCase()}
+                </Link>
               </div>
             ) : (
               <div className="flex shrink-0 items-center gap-2">

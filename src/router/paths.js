@@ -4,4 +4,5 @@ export const PATHS = {
   MOVIE: (id = ":id") => `/movie/${id}`,
   LOGIN: "/login",
   SIGNUP: "/signup",
+  MYPAGE: "/mypage",
 };

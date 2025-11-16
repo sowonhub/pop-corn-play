@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import {
@@ -9,14 +8,20 @@ import {
   Skeleton,
 } from "@/components/ui";
 import { useMovieDetail } from "@/hooks/movies";
+import useWishlist from "@/hooks/useWishlist";
 import { PATHS } from "@/router";
 import { minToHM } from "@/utils/format";
 
 export default function DetailPage() {
   const { id } = useParams();
   const { data: m, isLoading, error } = useMovieDetail(Number(id));
-  const [inWish, setInWish] = useState(false);
-  const toggleWish = () => setInWish((v) => !v);
+  const { toggle, contains } = useWishlist();
+  const inWish = contains(m?.id);
+  const toggleWish = () => {
+    if (m) {
+      toggle(m);
+    }
+  };
 
   if (isLoading) {
     return (

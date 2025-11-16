@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout";
 import DetailPage from "@/pages/DetailPage.jsx";
 import HomePage from "@/pages/HomePage.jsx";
 import LoginPage from "@/pages/LoginPage.jsx";
+import MyPage from "@/pages/MyPage.jsx";
 import QueryPage from "@/pages/QueryPage.jsx";
 import SignupPage from "@/pages/SignupPage.jsx";
 import { createBrowserRouter } from "react-router-dom";
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
         path: "mypage",
         element: (
           <RequireAuth>
-            <div className="p-6">마이페이지</div>
+            <MyPage />
           </RequireAuth>
         ),
       },
