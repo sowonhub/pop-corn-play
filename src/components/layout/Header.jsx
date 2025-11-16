@@ -5,45 +5,56 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  // const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-neutral-200/70 bg-white/80 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
-      <Container className="px-4">
-        <div className="flex h-12 items-center justify-between gap-3 sm:h-14">
+    <header className="sticky top-0 z-40 border-b-2 border-neutral-200/70 bg-white/80 px-8 shadow-sm backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/70">
+      <Container>
+        <div className="flex h-14 items-center justify-between gap-3">
           <Link
             to={PATHS.HOME}
-            className="shrink-0 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100"
+            className="hidden h-10 shrink-0 text-3xl font-semibold tracking-tight text-neutral-900 sm:block dark:text-neutral-100"
           >
-            🎬 Popcorn Play 🍿
+            🍿 Popcorn Play
           </Link>
-
-          <div className="hidden max-w-xl flex-1 sm:block">
+          <Link
+            to={PATHS.HOME}
+            className="h-10 shrink-0 text-3xl font-semibold tracking-tight text-neutral-900 sm:hidden dark:text-neutral-100"
+          >
+            🍿
+          </Link>
+          <div className="max-w-xl min-w-0 flex-1">
             <SearchInput />
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-40 sm:hidden">
-              <SearchInput compact />
-            </div>
             {user ? (
-              <div className="flex items-center gap-2">
-                <span className="hidden text-sm text-neutral-600 sm:inline dark:text-neutral-400">
+              <div className="flex shrink-0 items-center gap-2">
+                <span className="hidden shrink-0 text-sm text-neutral-600 sm:inline dark:text-neutral-400">
                   {user.email}
                 </span>
                 <button
                   onClick={logout}
-                  className="rounded-md px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  className="rounded-md px-3 py-1.5 text-sm whitespace-nowrap text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 >
                   로그아웃
                 </button>
               </div>
             ) : (
-              <Link
-                to={PATHS.LOGIN}
-                className="rounded-md px-3 py-1.5 text-sm text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-              >
-                로그인
-              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  to={PATHS.SIGNUP}
+                  className="rounded-xl border border-neutral-300 px-3 py-1.5 text-sm whitespace-nowrap text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                >
+                  회원가입
+                </Link>
+                <Link
+                  to={PATHS.LOGIN}
+                  className="rounded-xl border border-neutral-300 px-3 py-1.5 text-sm whitespace-nowrap text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                >
+                  로그인
+                </Link>
+              </div>
             )}
           </div>
         </div>
