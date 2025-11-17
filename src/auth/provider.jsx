@@ -1,62 +1,55 @@
-import { useEffect, useState } from "react";
-import { ENV } from "@/config/env";
-import { authClient } from "./client.js";
-import { AuthCtx } from "./context.js";
+import { useEffect, useMemo, useState } from "react";
+import { databaseAuthClient } from "./client.js";
+import { DatabaseAuthContext } from "./context.js";
 
-export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [busy, setBusy] = useState(true);
+const EVENTS = {
+  SIGNED_IN: "SIGNED_IN",
+  SIGNED_OUT: "SIGNED_OUT",
+};
+
+export default function DatabaseAuthProvider({ children }) {
+  const [databaseAuthUser, setDatabaseAuthUser] = useState(null);
+  const [databaseAuthLoading, setDatabaseAuthLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-
-    const isDev = import.meta.env.DEV;
-    const hasPlaceholder =
-      ENV.AUTH_DATABASE.URL.includes("your_") ||
-      ENV.AUTH_DATABASE.ANON_KEY.includes("your_");
-
-    if (isDev && hasPlaceholder) {
-      setUser(null);
-      setBusy(false);
-      return;
-    }
-
-    authClient.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setUser(data.session?.user ?? null);
-      setBusy(false);
-    }).catch(() => {
-      if (!mounted) return;
-      setUser(null);
-      setBusy(false);
-    });
-
     const {
       data: { subscription },
-    } = authClient.auth.onAuthStateChange((_, session) => {
-      if (!mounted) return;
-      setUser(session?.user ?? null);
+    } = databaseAuthClient.auth.onAuthStateChange((authEvent, authSession) => {
+      if (authEvent === EVENTS.SIGNED_IN) {
+        setDatabaseAuthUser(authSession.user);
+      } else if (authEvent === EVENTS.SIGNED_OUT) {
+        setDatabaseAuthUser(null);
+      }
     });
 
     return () => {
-      mounted = false;
-      if (subscription) {
-        subscription.unsubscribe();
-      }
+      subscription.unsubscribe();
+      setDatabaseAuthLoading(false);
     };
   }, []);
 
   const login = (email, password) =>
-    authClient.auth.signInWithPassword({ email, password });
+    databaseAuthClient.auth.signInWithPassword({ email, password });
 
   const signUp = (email, password) =>
-    authClient.auth.signUp({ email, password });
+    databaseAuthClient.auth.signUp({ email, password });
 
-  const logout = () => authClient.auth.signOut();
+  const logout = () => databaseAuthClient.auth.signOut();
+
+  const contextValue = useMemo(
+    () => ({
+      user: databaseAuthUser,
+      busy: databaseAuthLoading,
+      login,
+      signUp,
+      logout,
+    }),
+    [databaseAuthUser, databaseAuthLoading],
+  );
 
   return (
-    <AuthCtx.Provider value={{ user, busy, login, signUp, logout }}>
+    <DatabaseAuthContext.Provider value={contextValue}>
       {children}
-    </AuthCtx.Provider>
+    </DatabaseAuthContext.Provider>
   );
 }

@@ -25,10 +25,8 @@ export default function Grid() {
   }
 
   if (error) {
-    const isApiKeyError =
-      error?.message?.includes("API key is not set") ||
-      error?.message?.includes("placeholder");
-    
+    const isApiKeyError = error?.message?.includes("API key is not set");
+
     const errorMessage = isApiKeyError
       ? "영화 데이터를 불러오려면 .env 파일에 VITE_MOVIE_DATABASE_API_KEY를 설정해주세요."
       : "불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";

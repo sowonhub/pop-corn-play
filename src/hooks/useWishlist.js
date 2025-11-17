@@ -34,7 +34,7 @@ const persistWishlist = (nextItems) => {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextItems));
   } catch {
-    // ignore serialization errors
+    return;
   }
 };
 

@@ -26,15 +26,16 @@ export default function SearchInput({ compact = false }) {
     <form onSubmit={handleSubmit} role="search" aria-label="영화 검색">
       <div className={cn("relative", compact ? "" : "w-full")}>
         <input
+          name="keyword"
           type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="영화 검색…"
           className={cn(
             "w-full rounded-xl border border-neutral-300 bg-white pr-6 pl-4 text-neutral-900 placeholder:text-neutral-400 focus:ring-4 focus:ring-neutral-200/70 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:ring-neutral-800",
             compact ? "text-sm" : "h-10",
           )}
           aria-label="검색어"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="영화 검색…"
         />
 
         <button

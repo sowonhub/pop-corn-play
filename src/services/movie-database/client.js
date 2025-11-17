@@ -4,12 +4,12 @@ import axios from "axios";
 const DEFAULT_LANGUAGE = "ko-KR";
 
 export const movieApiClient = axios.create({
-  baseURL: ENV.MOVIE_DATABASE_API.API_BASE,
+  baseURL: ENV.VITE_DATABASE_MOVIE_API_BASE,
   headers: {
     Accept: "application/json",
   },
   params: {
-    api_key: ENV.MOVIE_DATABASE_API.API_KEY,
+    api_key: ENV.VITE_DATABASE_MOVIE_API_KEY,
     language: DEFAULT_LANGUAGE,
   },
 });
@@ -19,29 +19,26 @@ movieApiClient.interceptors.request.use(
     if (config.params) {
       Object.keys(config.params).forEach((key) => {
         const value = config.params[key];
-        if (value == null || (typeof value === "string" && value.trim() === "")) {
+        if (
+          value == null ||
+          (typeof value === "string" && value.trim() === "")
+        ) {
           delete config.params[key];
         }
       });
     }
 
-    const isDev = import.meta.env.DEV;
-    const apiKey = ENV.MOVIE_DATABASE_API.API_KEY;
-    if (
-      isDev &&
-      (apiKey.includes("your_") || !apiKey || apiKey.trim() === "")
-    ) {
-      return Promise.reject(
-        new Error(
-          "Movie Database API key is not set. Please set VITE_MOVIE_DATABASE_API_KEY in .env file",
-        ),
+    const apiKey = ENV.VITE_DATABASE_MOVIE_API_KEY ?? "";
+    if (!apiKey.trim()) {
+      throw new Error(
+        "Movie Database API key is not set. Please set VITE_DATABASE_MOVIE_API_KEY in .env file",
       );
     }
 
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    throw error;
   },
 );
 

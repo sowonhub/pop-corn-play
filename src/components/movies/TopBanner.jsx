@@ -60,7 +60,7 @@ export default function TopBanner() {
         className="absolute inset-0 h-full w-full object-cover"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
 
       <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
         <div className="mb-2 text-sm opacity-80">

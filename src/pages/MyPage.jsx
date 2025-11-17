@@ -1,4 +1,4 @@
-import { authClient, useAuth } from "@/auth";
+import { databaseAuthClient, useDatabaseAuth } from "@/auth";
 import { Card } from "@/components/movies";
 import { Container, EmptyState, Section, SectionHeader } from "@/components/ui";
 import useWishlist from "@/hooks/useWishlist";
@@ -28,7 +28,7 @@ const LABELS = {
 };
 
 export default function MyPage() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useDatabaseAuth();
   const { items: wishlist } = useWishlist();
   const [info, setInfo] = useState(null);
   const [status, setStatus] = useState("idle");
@@ -38,7 +38,7 @@ export default function MyPage() {
     if (!user) return;
     let mounted = true;
     setStatus("loading");
-    authClient.auth
+    databaseAuthClient.auth
       .getUser()
       .then(({ data, error: fetchError }) => {
         if (!mounted) return;
@@ -72,13 +72,8 @@ export default function MyPage() {
     const resolvedEmail = userInfo.email ?? identityEmail;
 
     return Object.entries({
-      // id: userInfo.id,
       email: resolvedEmail,
       phone: userInfo.phone,
-      // provider: userInfo.app_metadata?.provider,
-      // created_at: userInfo.created_at,
-      // last_sign_in_at: userInfo.last_sign_in_at,
-      // confirmed_at: userInfo.confirmed_at,
     })
       .filter(([, value]) => value != null && value !== "")
       .map(([key, value]) => ({
@@ -89,15 +84,8 @@ export default function MyPage() {
   }, [userInfo]);
 
   return (
-    <Container className="space-y-6 py-6">
-      <Section
-        header={
-          <SectionHeader
-            title="내 정보"
-            // description="Supabase에 저장된 계정 정보"
-          />
-        }
-      >
+    <Container className="space-y-6">
+      <Section header={<SectionHeader title="내 정보" />}>
         <div className="space-y-4 rounded-2xl border border-neutral-200/60 bg-white/60 p-6 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/60">
           {status === "loading" && (
             <p className="text-sm text-neutral-500">
@@ -131,32 +119,10 @@ export default function MyPage() {
               ))}
             </dl>
           )}
-          {/* {status !== "loading" && userInfo && infoRows.length === 0 && (
-            <p className="text-sm text-neutral-500">
-              현재 표시할 수 있는 추가 정보가 없습니다.
-            </p>
-          )} */}
-          {/* {userInfo?.user_metadata && (
-            <div className="rounded-xl border border-dashed border-neutral-300/80 bg-neutral-50/60 p-4 text-sm text-neutral-700 dark:border-neutral-700/60 dark:bg-neutral-950/40 dark:text-neutral-200">
-              <p className="mb-1 font-medium text-neutral-900 dark:text-neutral-100">
-                사용자 메타데이터
-              </p>
-              <pre className="max-h-48 overflow-auto text-[11px] leading-4">
-                {JSON.stringify(userInfo.user_metadata, null, 2)}
-              </pre>
-            </div>
-          )} */}
         </div>
       </Section>
 
-      <Section
-        header={
-          <SectionHeader
-            title="위시리스트"
-            // description="좋아하는 영화들을 모아볼 수 있어요."
-          />
-        }
-      >
+      <Section header={<SectionHeader title="위시리스트" />}>
         {wishlist.length === 0 ? (
           <EmptyState message="위시리스트에 추가된 영화가 없습니다. 영화 상세에서 위시 버튼을 눌러보세요." />
         ) : (

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useAuth } from "@/auth";
+import { useDatabaseAuth } from "@/auth";
 import { Input } from "@/components/ui";
 
 export default function SignupPage() {
-  const { signUp } = useAuth();
+  const { signUp } = useDatabaseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");

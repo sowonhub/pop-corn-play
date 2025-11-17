@@ -1,11 +1,11 @@
-import { useAuth } from "@/auth";
+import { useDatabaseAuth } from "@/auth";
 import { Input } from "@/components/ui";
 import { PATHS } from "@/router";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login } = useDatabaseAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname ?? PATHS.HOME;
