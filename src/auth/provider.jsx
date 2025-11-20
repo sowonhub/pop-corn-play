@@ -1,6 +1,6 @@
+import { databaseAuthClient } from "@/auth/client";
+import { DatabaseAuthContext } from "@/auth/context";
 import { useEffect, useMemo, useState } from "react";
-import { databaseAuthClient } from "./client.js";
-import { DatabaseAuthContext } from "./context.js";
 
 const EVENTS = {
   SIGNED_IN: "SIGNED_IN",
@@ -31,8 +31,12 @@ export default function DatabaseAuthProvider({ children }) {
   const login = (email, password) =>
     databaseAuthClient.auth.signInWithPassword({ email, password });
 
+  // 정보 저장 되는 곳은 databaseAuthUser에 저장됨
   const signUp = (email, password) =>
     databaseAuthClient.auth.signUp({ email, password });
+
+  const signInWithProvider = (provider, options) =>
+    databaseAuthClient.auth.signInWithOAuth({ provider, options });
 
   const logout = () => databaseAuthClient.auth.signOut();
 
@@ -42,14 +46,13 @@ export default function DatabaseAuthProvider({ children }) {
       busy: databaseAuthLoading,
       login,
       signUp,
+      signInWithProvider,
       logout,
     }),
     [databaseAuthUser, databaseAuthLoading],
   );
 
   return (
-    <DatabaseAuthContext.Provider value={contextValue}>
-      {children}
-    </DatabaseAuthContext.Provider>
+    <DatabaseAuthContext value={contextValue}>{children}</DatabaseAuthContext>
   );
 }

@@ -1,15 +1,20 @@
 import { PATHS } from "@/router";
 import { Link } from "react-router-dom";
-import { HEADER_AUTH_LINK_CLASS, HEADER_LINK_GROUP_CLASS } from "./index.js";
+
+const LOGIN_LINK_STYLE =
+  "rounded-full px-4 py-2 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200";
+
+const SIGNUP_LINK_STYLE =
+  "rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100";
 
 export function HeaderAuthLinks() {
   return (
-    <div className={HEADER_LINK_GROUP_CLASS}>
-      <Link to={PATHS.SIGNUP} className={HEADER_AUTH_LINK_CLASS}>
-        회원가입
-      </Link>
-      <Link to={PATHS.LOGIN} className={HEADER_AUTH_LINK_CLASS}>
+    <div className="flex shrink-0 items-center gap-2">
+      <Link to={PATHS.LOGIN} className={LOGIN_LINK_STYLE}>
         로그인
+      </Link>
+      <Link to={PATHS.SIGNUP} className={SIGNUP_LINK_STYLE}>
+        회원가입
       </Link>
     </div>
   );

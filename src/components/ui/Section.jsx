@@ -27,14 +27,16 @@ export function SectionHeader({ title, description, children, className }) {
 
   if (hasTitleOrDescription) {
     return (
-      <div className={cn("flex items-end justify-between gap-3", className)}>
+      <div className={cn("flex flex-col gap-1 mb-2", className)}>
         {title && (
-          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+          <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl dark:text-white">
+            {/* 포인트 라인 */}
+            <span className="h-8 w-1.5 rounded-full bg-linear-to-b from-rose-500 to-orange-400 md:h-9" />
             {title}
           </h2>
         )}
         {description && (
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">
+          <div className="pl-3.5 text-sm font-medium text-neutral-500 md:text-base dark:text-neutral-400">
             {description}
           </div>
         )}

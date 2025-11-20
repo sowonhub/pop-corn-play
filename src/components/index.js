@@ -1,3 +1,3 @@
-export * from "./layout";
-export * from "./movies";
-export * from "./ui";
+export * from "@/components/layout";
+export * from "@/components/movies";
+export * from "@/components/ui";

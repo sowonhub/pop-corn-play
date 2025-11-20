@@ -1,4 +1,4 @@
-import { Button } from "./index.js";
+import { Button } from "@/components/ui";
 
 export default function ErrorState({ message, onRetry, children }) {
   return (
@@ -13,4 +13,3 @@ export default function ErrorState({ message, onRetry, children }) {
     </div>
   );
 }
-

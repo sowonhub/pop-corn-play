@@ -1,173 +1,115 @@
-import { databaseAuthClient, useDatabaseAuth } from "@/auth";
+import { useDatabaseAuth } from "@/auth";
 import { Card } from "@/components/movies";
 import { Container, EmptyState, Section, SectionHeader } from "@/components/ui";
 import useWishlist from "@/hooks/useWishlist";
 import { PATHS } from "@/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const WISHLIST_SWIPE_GAP = 16;
-const WISHLIST_SWIPE_PADDING = 18;
-const WISHLIST_CARD_MIN_WIDTH = 180;
-const WISHLIST_SCROLL_STYLE = {
-  gap: `${WISHLIST_SWIPE_GAP}px`,
-  paddingLeft: `${WISHLIST_SWIPE_PADDING}px`,
-  paddingRight: `${WISHLIST_SWIPE_PADDING}px`,
-  touchAction: "pan-y",
-  WebkitOverflowScrolling: "touch",
-};
-
 const LABELS = {
-  id: "사용자 ID",
-  email: "이메일 계정",
-  phone: "전화번호",
-  provider: "가입 / 인증 제공자",
-  created_at: "가입일",
-  last_sign_in_at: "마지막 로그인",
-  confirmed_at: "이메일 확인",
+  email: "이메일",
+  nickname: "닉네임",
 };
 
 export default function MyPage() {
   const { user, logout } = useDatabaseAuth();
   const { items: wishlist } = useWishlist();
-  const [info, setInfo] = useState(null);
-  const [status, setStatus] = useState("idle");
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!user) return;
-    let mounted = true;
-    setStatus("loading");
-    databaseAuthClient.auth
-      .getUser()
-      .then(({ data, error: fetchError }) => {
-        if (!mounted) return;
-        if (fetchError) {
-          setError(fetchError.message);
-          setStatus("error");
-          return;
-        }
-        setInfo(data.user ?? null);
-        setStatus("success");
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setError(err.message ?? "정보를 불러오지 못했습니다.");
-        setStatus("error");
-      });
+  const userInfo = user;
 
-    return () => {
-      mounted = false;
-    };
-  }, [user]);
+  const { profileImage, infoRows } = useMemo(() => {
+    if (!userInfo) return { profileImage: null, infoRows: [] };
 
-  const userInfo = info ?? user;
+    const { user_metadata, email } = userInfo;
 
-  const infoRows = useMemo(() => {
-    if (!userInfo) return [];
+    // 1. 프로필 이미지
+    const profileImage = user_metadata?.avatar_url || user_metadata?.picture;
 
+    // 2. 닉네임
+    const nickname =
+      user_metadata?.full_name ||
+      user_metadata?.name ||
+      user_metadata?.nickname ||
+      user_metadata?.user_name;
+
+    // 3. 이메일 (identity_data 체크 포함)
     const identityEmail = userInfo.identities?.find(
       (identity) => identity?.identity_data?.email,
     )?.identity_data?.email;
-    const resolvedEmail = userInfo.email ?? identityEmail;
+    const resolvedEmail = email ?? identityEmail;
 
-    return Object.entries({
-      email: resolvedEmail,
-      phone: userInfo.phone,
-    })
-      .filter(([, value]) => value != null && value !== "")
-      .map(([key, value]) => ({
-        label: LABELS[key] ?? key,
-        value,
-        key,
-      }));
+    const rows = [
+      { key: "nickname", value: nickname, label: LABELS.nickname },
+      { key: "email", value: resolvedEmail, label: LABELS.email },
+    ].filter((item) => item.value);
+
+    return { profileImage, infoRows: rows };
   }, [userInfo]);
 
   return (
-    <Container className="space-y-6">
-      <Section header={<SectionHeader title="내 정보" />}>
-        <div className="space-y-4 rounded-2xl border border-neutral-200/60 bg-white/60 p-6 shadow-sm dark:border-neutral-800/60 dark:bg-neutral-900/60">
-          {status === "loading" && (
-            <p className="text-sm text-neutral-500">
-              정보를 불러오는 중입니다...
-            </p>
-          )}
-          {status === "error" && error && (
-            <p className="text-sm text-rose-500">
-              정보를 불러오는 중 오류가 발생했습니다: {error}
-            </p>
-          )}
-          {!userInfo && status !== "loading" && (
-            <p className="text-sm text-neutral-500">
-              로그인이 필요합니다. 다시 로그인한 후 확인해주세요.
-            </p>
-          )}
-          {status !== "loading" && userInfo && infoRows.length > 0 && (
-            <dl className="grid gap-3 md:grid-cols-2">
-              {infoRows.map(({ key, label, value }) => (
-                <div
-                  key={key}
-                  className="rounded-xl border border-neutral-200/60 bg-neutral-50/60 p-3 dark:border-neutral-700/60 dark:bg-neutral-950/40"
-                >
-                  <dt className="text-xs tracking-wide text-neutral-500 uppercase dark:text-neutral-400">
-                    {label}
-                  </dt>
-                  <dd className="mt-2 text-sm font-medium wrap-break-word text-neutral-900 dark:text-neutral-100">
-                    {value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          )}
+    <Container className="space-y-12 py-12">
+      <Section>
+        <div className="mx-auto flex max-w-2xl flex-col items-center space-y-6 text-center">
+          {/* 프로필 이미지 영역 */}
+          <div className="relative">
+            <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-neutral-100 shadow-lg dark:border-neutral-800 dark:bg-neutral-800">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="프로필"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-5xl font-bold text-neutral-300 dark:text-neutral-600">
+                  {infoRows
+                    .find((r) => r.key === "nickname" || r.key === "email")
+                    ?.value?.[0]?.toUpperCase() ?? "?"}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* 정보 텍스트 영역 */}
+          <div className="w-full space-y-2">
+            {!userInfo && (
+              <p className="text-sm text-neutral-500">
+                로그인이 필요합니다.
+              </p>
+            )}
+
+            {userInfo && (
+              <div className="space-y-1">
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                  {infoRows.find(r => r.key === 'nickname')?.value || '사용자'}
+                </h2>
+                <p className="text-neutral-500 dark:text-neutral-400">
+                  {infoRows.find(r => r.key === 'email')?.value}
+                </p>
+                  </div>
+            )}
+          </div>
+
+          <Link
+            to={PATHS.HOME}
+            onClick={() => logout()}
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-6 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
+          >
+            로그아웃
+          </Link>
         </div>
       </Section>
 
-      <Section header={<SectionHeader title="위시리스트" />}>
+      <Section header={<SectionHeader title={`내 위시리스트 (${wishlist.length})`} className="mb-6" />}>
         {wishlist.length === 0 ? (
-          <EmptyState message="위시리스트에 추가된 영화가 없습니다. 영화 상세에서 위시 버튼을 눌러보세요." />
+          <EmptyState message="아직 위시리스트에 담은 영화가 없습니다." />
         ) : (
-          <div className="space-y-3">
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              카드들을 좌우로 스와이프해서 위시리스트 영화를 확인해보세요.
-            </p>
-            <div className="relative">
-              <div
-                role="region"
-                aria-label="위시리스트 영화 스크롤"
-                className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth pb-3"
-                style={WISHLIST_SCROLL_STYLE}
-              >
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {wishlist.map((movie) => (
-                  <div
-                    key={movie.id}
-                    className="flex-0 snap-start"
-                    style={{ minWidth: `${WISHLIST_CARD_MIN_WIDTH}px` }}
-                  >
-                    <Card movie={movie} />
-                  </div>
+              <Card key={movie.id} movie={movie} />
                 ))}
-              </div>
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-linear-to-r from-white to-transparent dark:from-neutral-900/80"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-linear-to-l from-white to-transparent dark:from-neutral-900/80"
-              />
-            </div>
           </div>
         )}
       </Section>
-      <Link
-        to={PATHS.HOME}
-        onClick={() => {
-          logout();
-        }}
-        className="rounded-xl border border-neutral-300 px-3 py-2 text-sm whitespace-nowrap text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
-      >
-        로그아웃
-      </Link>
     </Container>
   );
 }

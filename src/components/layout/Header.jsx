@@ -4,29 +4,24 @@ import {
   HeaderLogo,
   HeaderUserLink,
 } from "@/components/layout";
-import { Container, SearchInput } from "@/components/ui";
-import {
-  HEADER_BODY_CLASS,
-  HEADER_HEADER_CLASS,
-  HEADER_LINK_GROUP_CLASS,
-  HEADER_SEARCH_INPUT_CLASS,
-} from "./index.js";
+import { Container, SearchInput, ThemeToggle } from "@/components/ui";
 
 export default function Header() {
-  const { user: databaseAuthUser } = useDatabaseAuth();
+  const { user, busy } = useDatabaseAuth();
 
   return (
-    <header className={HEADER_HEADER_CLASS}>
+    <header className="sticky top-0 z-40 border-b border-neutral-200/80 bg-white/80 px-8 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-950/80">
       <Container>
-        <div className={HEADER_BODY_CLASS}>
+        <div className="flex h-16 items-center justify-between gap-4 md:gap-8">
           <HeaderLogo />
-          <div className={HEADER_SEARCH_INPUT_CLASS}>
+          <div className="max-w-md min-w-0 flex-1">
             <SearchInput />
           </div>
 
-          <div className={HEADER_LINK_GROUP_CLASS}>
-            {databaseAuthUser ? (
-              <HeaderUserLink user={databaseAuthUser} />
+          <div className="flex shrink-0 items-center gap-3">
+            <ThemeToggle />
+            {busy ? null : user ? (
+              <HeaderUserLink user={user} />
             ) : (
               <HeaderAuthLinks />
             )}

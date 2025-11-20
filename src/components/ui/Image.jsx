@@ -1,6 +1,6 @@
+import Skeleton from "@/components/ui/Skeleton.jsx";
 import useImageLoading from "@/hooks/useImageLoading";
 import { cn } from "@/utils/cn";
-import Skeleton from "./Skeleton.jsx";
 
 export default function Image({
   src,

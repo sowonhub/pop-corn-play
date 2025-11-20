@@ -1,3 +1,3 @@
-export { databaseAuthClient } from "./client.js";
-export { DatabaseAuthContext, useDatabaseAuth } from "./context.js";
-export { default as DatabaseAuthProvider } from "./provider.jsx";
+export { databaseAuthClient } from "@/auth/client";
+export { DatabaseAuthContext, useDatabaseAuth } from "@/auth/context";
+export { default as DatabaseAuthProvider } from "@/auth/provider";

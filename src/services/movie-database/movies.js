@@ -1,10 +1,11 @@
-import { movieApiClient } from "./client.js";
+import { movieApiClient } from "@/services/movie-database/client";
 
 export const MOVIE_API_ENDPOINTS = {
   TRENDING_MOVIES_DAY: "/trending/movie/day",
   POPULAR_MOVIES: "/movie/popular",
   SEARCH_MOVIE: "/search/movie",
   MOVIE_DETAIL: (id) => `/movie/${id}`,
+  SIMILAR_MOVIES: (id) => `/movie/${id}/similar`,
 };
 
 export const MOVIE_IMAGE_CONFIG = {
@@ -45,7 +46,7 @@ export function getMovieImageUrl(path, type = "poster", size) {
   return `${MOVIE_IMAGE_CONFIG.BASE}${imageSize}${path}`;
 }
 
-const DEFAULT_MOVIE_DETAIL_APPEND = "videos";
+const DEFAULT_MOVIE_DETAIL_APPEND = "videos,images";
 
 export async function getMovieDetail(
   id,
@@ -54,6 +55,7 @@ export async function getMovieDetail(
   return movieApiClient.get(MOVIE_API_ENDPOINTS.MOVIE_DETAIL(id), {
     params: {
       append_to_response: appendToResponse,
+      include_image_language: "ko,null,en", // 한국어, 언어 없음, 영어 이미지 포함
     },
     signal,
   });
@@ -83,6 +85,12 @@ export async function getMovieSearch(searchKeyword, page = 1, { signal } = {}) {
       page,
       include_adult: false,
     },
+    signal,
+  });
+}
+
+export async function getSimilarMovies(id, { signal } = {}) {
+  return movieApiClient.get(MOVIE_API_ENDPOINTS.SIMILAR_MOVIES(id), {
     signal,
   });
 }

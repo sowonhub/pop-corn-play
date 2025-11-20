@@ -1,22 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { EMPTY_SEARCH_RESULT, getMovieSearch } from "@/services/movie-database";
 
-export default function useMovieSearch(searchKeyword, page = 1) {
+export default function useMovieSearch(searchKeyword) {
   const trimmedKeyword = (searchKeyword || "").trim();
   const hasKeyword = Boolean(trimmedKeyword);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["movieSearch", trimmedKeyword, page],
-    queryFn: ({ signal }) =>
+  return useInfiniteQuery({
+    queryKey: ["movieSearch", trimmedKeyword],
+    queryFn: ({ pageParam = 1, signal }) =>
       hasKeyword
-        ? getMovieSearch(trimmedKeyword, page, { signal })
+        ? getMovieSearch(trimmedKeyword, pageParam, { signal })
         : Promise.resolve(EMPTY_SEARCH_RESULT),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage) return undefined;
+      return lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined;
+    },
     enabled: hasKeyword,
   });
-
-  if (!hasKeyword) {
-    return { data: null, isLoading: false, error: null };
-  }
-
-  return { data, isLoading, error };
 }

@@ -1,19 +1,44 @@
 import { useSearchParams } from "react-router-dom";
 
 import { Card } from "@/components/movies";
-import { Container, EmptyState, ErrorState, Section, SectionHeader, Skeleton } from "@/components/ui";
+import {
+  Container,
+  EmptyState,
+  ErrorState,
+  Section,
+  SectionHeader,
+  Skeleton,
+} from "@/components/ui";
 import { useMovieSearch } from "@/hooks/movies";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function QueryPage() {
   const [params] = useSearchParams();
   const keyword = (params.get("keyword") || "").replace(/^"|"$/g, "").trim();
-  const { data, isLoading, error } = useMovieSearch(keyword);
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMovieSearch(keyword);
 
-  const list = data?.results ?? [];
+  const loadMoreRef = useInfiniteScroll(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, hasNextPage);
+
+  const list = data?.pages?.flatMap((page) => page.results) ?? [];
 
   return (
     <Container className="py-6 md:py-8 lg:py-10">
-      <Section header={<SectionHeader title={keyword ? `검색 결과: ${keyword}` : "검색"} />}>
+      <Section
+        header={
+          <SectionHeader title={keyword ? `검색 결과: ${keyword}` : "검색"} />
+        }
+      >
         {isLoading ? (
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
             {Array.from({ length: 10 }).map((_, i) => (
@@ -34,10 +59,20 @@ export default function QueryPage() {
         ) : list.length === 0 ? (
           <EmptyState message={`"${keyword}"에 대한 검색 결과가 없습니다.`} />
         ) : (
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
-            {list.map((m) => (
-              <Card key={m.id} movie={m} />
-            ))}
+          <div>
+            <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4">
+              {list.map((m) => (
+                <Card key={m.id} movie={m} />
+              ))}
+            </div>
+            {/* Infinite Scroll Trigger */}
+            {(hasNextPage || isFetchingNextPage) && (
+              <div ref={loadMoreRef} className="mt-8 flex justify-center py-4">
+                {isFetchingNextPage && (
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-neutral-400 border-t-transparent dark:border-neutral-600" />
+                )}
+              </div>
+            )}
           </div>
         )}
       </Section>

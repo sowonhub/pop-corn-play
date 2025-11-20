@@ -3,7 +3,7 @@ import { Container, Grid, Section, SectionHeader } from "@/components/ui";
 
 export default function HomePage() {
   return (
-    <Container>
+    <Container className="space-y-12 pb-12">
       <Section
         header={
           <SectionHeader title="Top 10" description="오늘 많이 본 영화" />

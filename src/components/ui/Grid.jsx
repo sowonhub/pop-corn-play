@@ -1,9 +1,23 @@
 import { Card } from "@/components/movies";
 import { EmptyState, ErrorState, Skeleton } from "@/components/ui";
 import { usePopularMovies } from "@/hooks/movies";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function Grid() {
-  const { data, isLoading, error } = usePopularMovies();
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePopularMovies();
+
+  const loadMoreRef = useInfiniteScroll(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, hasNextPage);
 
   if (isLoading) {
     return (
@@ -39,16 +53,26 @@ export default function Grid() {
     );
   }
 
-  const list = data?.results ?? [];
+  const list = data?.pages?.flatMap((page) => page.results) ?? [];
   if (list.length === 0) {
     return <EmptyState message="표시할 영화가 없어요." />;
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-      {list.map((m) => (
-        <Card key={m.id} movie={m} />
-      ))}
+    <div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        {list.map((m) => (
+          <Card key={m.id} movie={m} />
+        ))}
+      </div>
+      {/* Infinite Scroll Trigger */}
+      {(hasNextPage || isFetchingNextPage) && (
+        <div ref={loadMoreRef} className="mt-8 flex justify-center py-4">
+          {isFetchingNextPage && (
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-neutral-400 border-t-transparent dark:border-neutral-600" />
+          )}
+        </div>
+      )}
     </div>
   );
 }

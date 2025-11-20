@@ -1,2 +1,1 @@
-export * from "./movies.js";
-
+export * from "@/services/movie-database/movies";

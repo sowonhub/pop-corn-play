@@ -1,6 +1,5 @@
-export { default as Header } from "./Header.jsx";
-export * from "./HeaderAuthLinks.jsx";
-export * from "./HeaderLogo.jsx";
-export * from "./HeaderUserLink.jsx";
-export { default as Layout } from "./Layout.jsx";
-export * from "./layoutStyles";
+export { default as Header } from "@/components/layout/Header.jsx";
+export * from "@/components/layout/HeaderAuthLinks.jsx";
+export * from "@/components/layout/HeaderLogo.jsx";
+export * from "@/components/layout/HeaderUserLink.jsx";
+export { default as Layout } from "@/components/layout/Layout.jsx";
