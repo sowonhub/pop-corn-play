@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDatabaseAuth } from "@/auth";
-import { Input } from "@/components/ui";
+import { Button, Input } from "@/components/ui";
+import { PATHS } from "@/router";
 
 export default function SignupPage() {
   const { signUp } = useDatabaseAuth();
@@ -38,7 +39,9 @@ export default function SignupPage() {
       setIsComplete(true);
     } catch {
       setError(
-        "회원가입에 실패했습니다. 이메일을 바꾸거나 잠시 후 다시 시도해 주세요.",
+        "회원가입에 실패했습니다." +
+          "\n" +
+          "이메일을 바꾸거나 잠시 후 다시 시도해 주세요.",
       );
     } finally {
       setLoading(false);
@@ -47,68 +50,115 @@ export default function SignupPage() {
 
   if (isComplete) {
     return (
-      <div className="mx-auto max-w-sm p-6">
-        <h1 className="mb-3 text-xl font-semibold">회원가입 완료</h1>
-        <p className="text-sm text-neutral-700 dark:text-neutral-300">
-          입력하신 주소로 <strong>인증 메일</strong>을 보냈어요. 메일함에서
-          인증을 완료하신 후
-          <span className="whitespace-nowrap"> "로그인" </span>해 주세요.
-        </p>
-        <Link to="/login" className="mt-4 inline-block text-sm underline">
-          로그인 페이지로 이동
-        </Link>
+      <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-neutral-800">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+              회원가입 완료
+            </h2>
+            <div className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+              <p>
+                입력하신 주소로 <strong>인증 메일</strong>을 보냈어요.
+              </p>
+              <p className="mt-1">
+                메일함에서 인증을 완료하신 후 로그인해 주세요.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <Link to={PATHS.LOGIN}>
+              <Button className="w-full justify-center bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100">
+                로그인 페이지로 이동
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-sm p-6">
-      <h1 className="mb-4 text-xl font-semibold">회원가입</h1>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <Input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일"
-        />
-        <Input
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호 (8자 이상)"
-        />
-        <Input
-          type="password"
-          required
-          value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-          placeholder="비밀번호 확인"
-        />
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={agree}
-            onChange={(e) => setAgree(e.target.checked)}
-          />
-          <span>이용약관 및 개인정보 처리에 동의합니다.</span>
-        </label>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="inline-flex h-10 w-full items-center justify-center rounded-md border border-neutral-300 bg-neutral-900 text-white disabled:opacity-60 dark:border-neutral-700 dark:bg-neutral-200 dark:text-neutral-900"
-        >
-          {loading ? "가입 중…" : "회원가입"}
-        </button>
-      </form>
-      <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
-        이미 계정이 있으신가요?{" "}
-        <Link to="/login" className="underline">
-          로그인
-        </Link>
-      </p>
+    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-neutral-800">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
+            회원가입
+          </h2>
+          <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+            새로운 계정을 만들어 서비스를 이용해보세요.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="space-y-4">
+            <Input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="이메일"
+              className="block w-full"
+            />
+            <Input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호 (8자 이상)"
+              className="block w-full"
+            />
+            <Input
+              type="password"
+              required
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              placeholder="비밀번호 확인"
+              className="block w-full"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <input
+              id="agree-checkbox"
+              type="checkbox"
+              checked={agree}
+              onChange={(e) => setAgree(e.target.checked)}
+              className="h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900 dark:border-neutral-600 dark:bg-neutral-700 dark:ring-offset-neutral-800"
+            />
+            <label
+              htmlFor="agree-checkbox"
+              className="ml-2 block text-sm text-neutral-900 dark:text-neutral-300"
+            >
+              이용약관 및 개인정보 처리에 동의합니다.
+            </label>
+          </div>
+
+          {error && (
+            <div className="text-center text-sm font-medium whitespace-pre-line text-red-500">
+              {error}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="flex w-full justify-center rounded-md bg-neutral-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100"
+          >
+            {loading ? "가입 중…" : "회원가입"}
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
+          이미 계정이 있으신가요?{" "}
+          <Link
+            to={PATHS.LOGIN}
+            className="font-medium text-neutral-900 hover:text-neutral-800 dark:text-white dark:hover:text-neutral-200"
+          >
+            로그인
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
