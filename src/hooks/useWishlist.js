@@ -1,14 +1,23 @@
+import { useDatabaseAuth } from "@/auth/context";
 import { useCallback, useEffect, useState } from "react";
 
-const STORAGE_KEY = "mini-project.wishlist";
+const BASE_KEY = "mini-project.wishlist";
 const listeners = new Set();
-let storageListenerRegistered = false;
 
-const readStoredWishlist = () => {
-  if (typeof window === "undefined") return [];
+// Global state to sync between components in the same session
+let globalState = {
+  userId: null,
+  items: [],
+};
+
+const getStorageKey = (userId) => (userId ? `${BASE_KEY}.${userId}` : null);
+
+const readStoredWishlist = (userId) => {
+  if (!userId || typeof window === "undefined") return [];
 
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const key = getStorageKey(userId);
+    const stored = window.localStorage.getItem(key);
     if (!stored) return [];
     const parsed = JSON.parse(stored);
     return Array.isArray(parsed) ? parsed : [];
@@ -26,96 +35,133 @@ const normalizeMovie = (movie) => ({
   release_date: movie?.release_date,
 });
 
-let globalWishlist = readStoredWishlist();
-
-const persistWishlist = (nextItems) => {
-  if (typeof window === "undefined") return;
+const persistWishlist = (userId, nextItems) => {
+  if (!userId || typeof window === "undefined") return;
 
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextItems));
+    window.localStorage.setItem(
+      getStorageKey(userId),
+      JSON.stringify(nextItems),
+    );
   } catch {
     return;
   }
 };
 
-const notifyListeners = () => {
-  listeners.forEach((listener) => listener(globalWishlist));
+const notifyListeners = (items) => {
+  listeners.forEach((listener) => listener(items));
 };
 
-const handleStorageEvent = (event) => {
-  if (event.key !== STORAGE_KEY) return;
-  globalWishlist = readStoredWishlist();
-  notifyListeners();
-};
-
-const registerStorageListener = () => {
-  if (storageListenerRegistered || typeof window === "undefined") return;
-  window.addEventListener("storage", handleStorageEvent);
-  storageListenerRegistered = true;
-};
-
-const updateGlobalWishlist = (updater) => {
-  const nextItems =
-    typeof updater === "function" ? updater(globalWishlist) : updater;
-
-  if (nextItems === globalWishlist) return;
-
-  globalWishlist = nextItems;
-  persistWishlist(globalWishlist);
-  notifyListeners();
+const updateGlobalState = (userId, nextItems) => {
+  globalState = { userId, items: nextItems };
+  persistWishlist(userId, nextItems);
+  notifyListeners(nextItems);
 };
 
 export default function useWishlist() {
-  const [items, setItems] = useState(() => globalWishlist);
+  const { user } = useDatabaseAuth();
+  const userId = user?.id ?? null;
 
+  // Initialize state based on current user and global state
+  const [items, setItems] = useState(() => {
+    if (globalState.userId === userId) {
+      return globalState.items;
+    }
+    return readStoredWishlist(userId);
+  });
+
+  // Sync with global state and handle user changes
   useEffect(() => {
-    registerStorageListener();
+    // Update global state if user switched
+    if (globalState.userId !== userId) {
+      const newItems = readStoredWishlist(userId);
+      globalState = { userId, items: newItems };
+      // Notify others effectively resets them to the new user's list
+      notifyListeners(newItems);
+    }
+
+    // Update local state if it differs (e.g. initially loaded from storage vs global)
+    if (items !== globalState.items) {
+      setItems(globalState.items);
+    }
 
     const handleChange = (nextItems) => {
       setItems(nextItems);
     };
 
     listeners.add(handleChange);
-    setItems(globalWishlist);
+
+    // Handle multi-tab sync
+    const handleStorageEvent = (event) => {
+      if (event.key === getStorageKey(userId)) {
+        const newItems = readStoredWishlist(userId);
+        if (globalState.userId === userId) {
+          globalState.items = newItems;
+          notifyListeners(newItems);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageEvent);
 
     return () => {
       listeners.delete(handleChange);
+      window.removeEventListener("storage", handleStorageEvent);
     };
-  }, []);
+  }, [userId]); // Re-run when user changes
 
-  const add = useCallback((movie) => {
-    if (!movie || movie.id == null) return;
+  const add = useCallback(
+    (movie) => {
+      if (!userId || !movie || movie.id == null) return;
 
-    updateGlobalWishlist((prev) => {
-      if (prev.some((item) => item.id === movie.id)) return prev;
-      return [...prev, normalizeMovie(movie)];
-    });
-  }, []);
+      const prev = globalState.items;
+      if (prev.some((item) => item.id === movie.id)) return;
 
-  const remove = useCallback((movieId) => {
-    if (movieId == null) return;
+      const nextItems = [...prev, normalizeMovie(movie)];
+      updateGlobalState(userId, nextItems);
+    },
+    [userId],
+  );
 
-    updateGlobalWishlist((prev) => prev.filter((item) => item.id !== movieId));
-  }, []);
+  const remove = useCallback(
+    (movieId) => {
+      if (!userId || movieId == null) return;
 
-  const toggle = useCallback((movie) => {
-    if (!movie || movie.id == null) return;
+      const prev = globalState.items;
+      const nextItems = prev.filter((item) => item.id !== movieId);
 
-    updateGlobalWishlist((prev) => {
+      if (prev.length === nextItems.length) return; // No change
+
+      updateGlobalState(userId, nextItems);
+    },
+    [userId],
+  );
+
+  const toggle = useCallback(
+    (movie) => {
+      if (!userId || !movie || movie.id == null) return;
+
+      const prev = globalState.items;
       const exists = prev.some((item) => item.id === movie.id);
+
+      let nextItems;
       if (exists) {
-        return prev.filter((item) => item.id !== movie.id);
+        nextItems = prev.filter((item) => item.id !== movie.id);
+      } else {
+        nextItems = [...prev, normalizeMovie(movie)];
       }
-      return [...prev, normalizeMovie(movie)];
-    });
-  }, []);
+
+      updateGlobalState(userId, nextItems);
+    },
+    [userId],
+  );
 
   const contains = useCallback(
     (movieId) => {
-      if (movieId == null) return false;
+      if (!userId || movieId == null) return false;
       return items.some((item) => item.id === movieId);
     },
-    [items],
+    [items, userId],
   );
 
   return {
