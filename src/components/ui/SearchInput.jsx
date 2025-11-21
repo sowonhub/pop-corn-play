@@ -1,84 +1,87 @@
-/**
- * [6-1-1단계] components/ui/SearchInput.jsx - 검색 입력 컴포넌트
- * 
- * 이 컴포넌트는:
- * 1. 검색어를 입력받습니다
- * 2. Enter를 누르면 검색 결과 페이지로 이동합니다
- * 
- * 실행 순서:
- * - Header 컴포넌트에서 이 컴포넌트를 사용합니다
- * 
- * 다음 단계:
- *   [9단계] pages/QueryPage.jsx (검색 결과 페이지로 이동)
- */
-
+import { PATHS } from "@/router";
+import { cn } from "@/utils/cn";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { cn } from "@/utils/cn";
-
-export default function SearchInput({ compact = false }) {
+export default function SearchInput({ compact = false, transparent = false }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const keyword = params.get("keyword") ?? "";
   const [query, setQuery] = useState(keyword);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     setQuery(keyword);
   }, [keyword]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     const trimmedQuery = query.trim();
-    const url = trimmedQuery
-      ? `/search?keyword=${encodeURIComponent(trimmedQuery)}`
-      : "/";
-    navigate(url);
+    const pathname = trimmedQuery
+      ? `${PATHS.SEARCH}?keyword=${encodeURIComponent(trimmedQuery)}`
+      : PATHS.HOME;
+    navigate(pathname);
   };
 
   return (
-    <form onSubmit={handleSubmit} role="search" aria-label="영화 검색">
-      <div className={cn("relative", compact ? "" : "w-full")}>
+    <form
+      onSubmit={handleSubmit}
+      role="search"
+      aria-label="영화 검색"
+      className={cn("relative mx-auto max-w-md", compact ? "" : "w-full")}
+    >
+      <div
+        className={cn(
+          "relative flex items-center overflow-hidden rounded-full transition-all",
+          transparent
+            ? [
+                "border border-white/30 bg-black/30 backdrop-blur-sm",
+                isFocused
+                  ? "bg-black/50 ring-2 ring-rose-500/50"
+                  : "hover:bg-black/40",
+              ]
+            : [
+                "bg-neutral-100 dark:bg-neutral-900",
+                isFocused
+                  ? "bg-white ring-2 ring-rose-500/50 dark:bg-neutral-800"
+                  : "hover:bg-neutral-200 dark:hover:bg-neutral-800",
+              ],
+        )}
+      >
+        <div className="flex h-full w-10 items-center justify-center text-neutral-400">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className={cn("h-5 w-5", transparent && "text-white/70")}
+          >
+            <path
+              fillRule="evenodd"
+              d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
         <input
+          name="keyword"
           type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="영화 검색…"
           className={cn(
-            "w-full rounded-xl border border-neutral-300 bg-white pr-10 pl-9 text-neutral-900 placeholder:text-neutral-400 focus:ring-4 focus:ring-neutral-200/70 focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:ring-neutral-800",
-            compact ? "h-9 text-sm" : "h-10",
+            "w-full bg-transparent py-2.5 pr-4 text-sm focus:outline-none",
+            transparent
+              ? "text-white placeholder:text-white/70"
+              : "text-neutral-900 placeholder:text-neutral-500 dark:text-neutral-100",
+            compact ? "py-2" : "h-11",
           )}
           aria-label="검색어"
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder="영화 제목, 배우, 감독으로 검색..."
+          autoComplete="off"
         />
-        <svg
-          className="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="11"
-            cy="11"
-            r="7"
-            stroke="currentColor"
-            className="text-neutral-400"
-          />
-          <path
-            d="M20 20L17 17"
-            stroke="currentColor"
-            className="text-neutral-400"
-          />
-        </svg>
-        <button
-          type="submit"
-          className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded-lg border border-neutral-300 bg-white px-2 py-1 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800"
-          aria-label="검색 실행"
-          title="검색"
-        >
-          Enter
-        </button>
       </div>
     </form>
   );

@@ -1,5 +1,6 @@
-import { TMDB_IMG_SRC, tmdbImgSrc } from "@/services/tmdb";
-import { cn } from "@/utils/cn.js";
+import Skeleton from "@/components/ui/Skeleton.jsx";
+import useImageLoading from "@/hooks/useImageLoading";
+import { cn } from "@/utils/cn";
 
 export default function Image({
   src,
@@ -7,24 +8,36 @@ export default function Image({
   type = "poster",
   size,
   className,
+  wrapperClassName,
+  showSkeleton = true,
   ...rest
 }) {
-  const onError = (e) => {
-    if (e?.currentTarget) {
-      e.currentTarget.src = TMDB_IMG_SRC.NO_IMAGE;
-      e.currentTarget.onerror = null;
-    }
-  };
+  const { imageSrc, loading, handleLoad, handleError } = useImageLoading(
+    src,
+    type,
+    size,
+  );
 
   return (
-    <img
-      loading="lazy"
-      decoding="async"
-      src={tmdbImgSrc(src, type, size)}
-      alt={alt}
-      onError={onError}
-      className={cn("block h-auto max-w-full", className)}
-      {...rest}
-    />
+    <div className={cn("relative", wrapperClassName)}>
+      {loading && showSkeleton && (
+        <Skeleton className="absolute inset-0 rounded-md" />
+      )}
+      <img
+        loading="lazy"
+        decoding="async"
+        src={imageSrc}
+        alt={alt}
+        onLoad={handleLoad}
+        onError={handleError}
+        className={cn(
+          "block h-auto max-w-full",
+          loading && showSkeleton && "opacity-0",
+          className,
+        )}
+        draggable={false}
+        {...rest}
+      />
+    </div>
   );
 }

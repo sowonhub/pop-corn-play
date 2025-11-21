@@ -1,3 +1,3 @@
-export { AuthCtx, useAuth } from "./context.js";
-export { default as AuthProvider } from "./provider.jsx";
-export { SUPABASE } from "./supabase.js";
+export { databaseAuthClient } from "@/auth/client";
+export { DatabaseAuthContext, useDatabaseAuth } from "@/auth/context";
+export { default as DatabaseAuthProvider } from "@/auth/provider";

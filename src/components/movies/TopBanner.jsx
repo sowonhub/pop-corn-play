@@ -1,73 +1,55 @@
-/**
- * [7-1단계] components/movies/TopBanner.jsx - Top 10 영화 배너 컴포넌트
- * 
- * 이 컴포넌트는:
- * 1. 인기 영화 10개를 가져옵니다
- * 2. 4초마다 자동으로 다음 영화로 넘어갑니다
- * 3. 마우스를 올리면 자동 넘김을 멈춥니다
- * 
- * 실행 순서:
- * - HomePage에서 이 컴포넌트를 사용합니다
- * 
- * 다음 단계:
- *   [7-1-1단계] hooks/movies/useTop.js (영화 데이터 가져오기)
- */
-
+import TopBannerSkeleton from "@/components/movies/TopBannerSkeleton";
+import { useTopMovies } from "@/hooks/movies";
+import { PATHS } from "@/router";
+import { getMovieImageUrl } from "@/services/movie-database";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { useTop } from "@/hooks/movies";
-import { ROUTES } from "@/router";
-import { tmdbImgSrc } from "@/services/tmdb";
-import { cn } from "@/utils/cn";
+const BANNER_AUTO_SLIDE_INTERVAL_MS = 4000;
 
-const INTERVAL_TIME = 4000; // 4초마다 자동 넘김
-
-// 이미지 URL 생성 함수
 const getImageUrl = (path, size = "w1280") =>
-  tmdbImgSrc(path, "backdrop", size);
+  getMovieImageUrl(path, "backdrop", size);
 
-// 다음 인덱스 계산 (마지막이면 처음으로)
 const getNextIndex = (i, len) => (i + 1) % len;
-// 이전 인덱스 계산 (처음이면 마지막으로)
-const getPrevIndex = (i, len) => (i - 1 + len) % len;
+// const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
-  const { list, loading } = useTop();
+  const { data, isLoading, error } = useTopMovies();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    if (loading || !list.length || paused) return;
+    if (isLoading || !data?.length || paused) return;
 
     timerRef.current = setInterval(
-      () => setIndex((i) => getNextIndex(i, list.length)),
-      INTERVAL_TIME,
+      () => setIndex((i) => getNextIndex(i, data.length)),
+      BANNER_AUTO_SLIDE_INTERVAL_MS,
     );
 
     return () => clearInterval(timerRef.current);
-  }, [list.length, loading, paused]);
+  }, [data?.length, isLoading, paused]);
 
-  if (loading) {
-    return (
-      <div className="aspect-video w-full animate-pulse rounded-xl bg-neutral-100 dark:bg-neutral-900" />
-    );
+  if (isLoading) {
+    return <TopBannerSkeleton />;
   }
 
-  if (!list.length) {
+  if (error || !data?.length) {
     return null;
   }
 
-  const cur = list[index];
-  const bg = getImageUrl(cur.backdrop_path || cur.poster_path);
+  const currentMovie = data[index];
+  const backgroundImageUrl = getImageUrl(
+    currentMovie.backdrop_path || currentMovie.poster_path,
+  );
 
-  const goPrev = () => setIndex((i) => getPrevIndex(i, list.length));
-  const goNext = () => setIndex((i) => getNextIndex(i, list.length));
+  // const goPrev = () => setIndex((i) => getPrevIndex(i, data.length));
+  // const goNext = () => setIndex((i) => getNextIndex(i, data.length));
 
   return (
     <section
-      className="relative aspect-video w-full overflow-hidden rounded-xl"
+      onClick={() => navigate(PATHS.MOVIE(currentMovie.id))}
+      className="relative aspect-video w-full overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -75,62 +57,61 @@ export default function TopBanner() {
       aria-label="Top 10 영화 배너"
     >
       <img
-        src={bg}
-        alt={cur.title || cur.name}
-        className="absolute inset-0 h-full w-full object-cover"
+        key={currentMovie.id}
+        src={backgroundImageUrl}
+        alt={currentMovie.title || currentMovie.name}
+        className="animate-ken-burns absolute inset-0 h-full w-full object-cover"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
-      <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
-        <div className="mb-2 text-sm opacity-80">
-          Top 10 · {index + 1} / {list.length}
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-12 left-1/2 z-30 -translate-x-1/2 animate-bounce text-white/70">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="h-10 w-10 md:h-12 md:w-12"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-8 pb-32 text-white">
+        <div className="mb-1">
+          <h2 className="flex items-center gap-2 text-[clamp(1.5rem,5vw,2.5rem)] font-bold tracking-tight text-white">
+            <span className="h-9 w-1.5 rounded-full bg-linear-to-b from-rose-500 to-orange-400 md:h-10" />
+            Top 10
+          </h2>
         </div>
-        <h2 className="line-clamp-2 text-2xl font-semibold md:text-4xl">
-          {cur.title || cur.name}
+        <h2 className="line-clamp-1 text-[clamp(2rem,5vw,3.5rem)] font-bold drop-shadow-lg">
+          <span className="mr-3 text-rose-500 drop-shadow-md">
+            {index + 1}위
+          </span>
+          {currentMovie.title || currentMovie.name}
         </h2>
-        <p className="mt-2 line-clamp-3 max-w-3xl text-sm opacity-90 md:text-base">
-          {cur.overview || "줄거리 정보가 없습니다."}
-        </p>
-        <div className="mt-4 flex items-center gap-2">
-          <Link
-            to={ROUTES.MOVIE(cur.id)}
-            className="inline-flex h-10 items-center rounded-md bg-white px-4 text-neutral-900 transition-none hover:bg-white hover:text-neutral-900"
-          >
-            자세히 보기
-          </Link>
+        <div className="mt-2 text-base font-medium text-white/80 drop-shadow-md">
+          오늘 가장 많이 본 영화
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={goPrev}
-        aria-label="이전"
-        className="absolute top-1/2 left-2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/50 text-white transition-none hover:bg-black/60"
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        onClick={goNext}
-        aria-label="다음"
-        className="absolute top-1/2 right-2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/50 text-white transition-none hover:bg-black/60"
-      >
-        ›
-      </button>
-
-      <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-        {list.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            aria-label={`${i + 1}번째 배너로 이동`}
-            className={cn(
-              "h-2.5 w-2.5 rounded-full",
-              i === index ? "bg-white" : "bg-white/40",
-            )}
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 z-20 h-1 w-full bg-white/20">
+        {!paused && (
+          <div
+            key={index}
+            className="h-full origin-left bg-white"
+            style={{
+              animation: `progress ${BANNER_AUTO_SLIDE_INTERVAL_MS}ms linear forwards`,
+            }}
           />
-        ))}
+        )}
       </div>
     </section>
   );

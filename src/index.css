@@ -1,1 +1,29 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
+
+/* Tailwind v4에서 다크 모드를 클래스 기반으로 강제 적용 */
+@variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .animate-ken-burns {
+    animation: ken-burns 20s ease-out infinite alternate;
+  }
+
+  @keyframes ken-burns {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes progress {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+}

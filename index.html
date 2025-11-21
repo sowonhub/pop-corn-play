@@ -1,14 +1,13 @@
-<!-- 
-  [1단계] index.html - 브라우저가 가장 먼저 로드하는 파일
-  브라우저가 이 파일을 읽고 <div id="root">에 React 앱을 그립니다
--->
 <!doctype html>
 <html lang="en">
   <head>
     <script>
       try {
-        const t = localStorage.getItem("theme");
-        if (t === "dark") document.documentElement.classList.add("dark");
+        const THEME_KEY = "theme";
+        const THEME_DARK = "dark";
+        const t = localStorage.getItem(THEME_KEY);
+        if (t === THEME_DARK)
+          document.documentElement.classList.add(THEME_DARK);
       } catch {}
     </script>
 
@@ -19,7 +18,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- [2단계] main.jsx를 실행합니다 -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

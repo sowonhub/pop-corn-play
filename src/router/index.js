@@ -1,4 +1,3 @@
-export { router } from "./router.jsx";
-export { default as RequireAuth } from "./RequireAuth.jsx";
-export { ROUTES } from "./paths.js";
-
+export { PATHS } from "@/router/paths.js";
+export { default as RequireDatabaseAuth } from "@/router/RequireDatabaseAuth.jsx";
+export { router } from "@/router/router.jsx";
