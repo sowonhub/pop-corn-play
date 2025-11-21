@@ -50,7 +50,7 @@ export default function SignupPage() {
 
   if (isComplete) {
     return (
-      <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 pt-20 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-neutral-800">
           <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
@@ -79,7 +79,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 pt-20 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-neutral-800">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">

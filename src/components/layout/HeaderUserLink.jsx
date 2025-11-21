@@ -1,4 +1,5 @@
 import { PATHS } from "@/router";
+import { cn } from "@/utils/cn";
 import { Link } from "react-router-dom";
 
 function getUserDisplayInfo(user) {
@@ -23,7 +24,7 @@ function getUserDisplayInfo(user) {
   return null;
 }
 
-export function HeaderUserLink({ user }) {
+export function HeaderUserLink({ user, className }) {
   const displayInfo = getUserDisplayInfo(user);
 
   if (!displayInfo) {
@@ -34,7 +35,10 @@ export function HeaderUserLink({ user }) {
     <div className="flex shrink-0 items-center gap-2">
       <Link
         to={PATHS.MYPAGE}
-        className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-neutral-200 bg-white shadow-sm ring-2 ring-transparent transition-all hover:ring-rose-100 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:ring-rose-900/30"
+        className={cn(
+          "flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-neutral-200 bg-white shadow-sm ring-2 ring-transparent transition-all hover:ring-rose-100 md:h-11 md:w-11 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:ring-rose-900/30",
+          className,
+        )}
       >
         {displayInfo.type === "image" ? (
           <img
@@ -43,7 +47,7 @@ export function HeaderUserLink({ user }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-sm font-bold text-neutral-600 dark:text-neutral-300">
+          <span className="text-base font-bold text-neutral-600 md:text-lg dark:text-neutral-300">
             {displayInfo.value}
           </span>
         )}

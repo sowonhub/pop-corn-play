@@ -1,6 +1,15 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] }
-  }
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "module": "esnext",
+    "target": "es2020",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -10,7 +10,7 @@ export default function ThemeToggle({ className }) {
       type="button"
       onClick={toggleTheme}
       className={cn(
-        "relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100",
+        "relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-transparent text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:ring-1 focus-visible:ring-neutral-950 focus-visible:outline-none dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100",
         className,
       )}
       aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
@@ -25,8 +25,10 @@ export default function ThemeToggle({ className }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         className={cn(
-          "absolute h-5 w-5 transition-all duration-300",
-          isDark ? "scale-100 rotate-0 opacity-100" : "scale-0 rotate-90 opacity-0",
+          "absolute h-4 w-4 text-amber-500 transition-all duration-300",
+          isDark
+            ? "scale-100 rotate-0 opacity-100"
+            : "scale-0 rotate-90 opacity-0",
         )}
       >
         <circle cx="12" cy="12" r="4" />
@@ -50,7 +52,7 @@ export default function ThemeToggle({ className }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         className={cn(
-          "absolute h-5 w-5 transition-all duration-300",
+          "absolute h-4 w-4 text-indigo-500 transition-all duration-300 dark:text-indigo-400",
           !isDark
             ? "scale-100 rotate-0 opacity-100"
             : "scale-0 -rotate-90 opacity-0",
@@ -61,4 +63,3 @@ export default function ThemeToggle({ className }) {
     </button>
   );
 }
-

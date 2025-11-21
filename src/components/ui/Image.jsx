@@ -8,6 +8,7 @@ export default function Image({
   type = "poster",
   size,
   className,
+  wrapperClassName,
   showSkeleton = true,
   ...rest
 }) {
@@ -18,7 +19,7 @@ export default function Image({
   );
 
   return (
-    <div className="relative">
+    <div className={cn("relative", wrapperClassName)}>
       {loading && showSkeleton && (
         <Skeleton className="absolute inset-0 rounded-md" />
       )}

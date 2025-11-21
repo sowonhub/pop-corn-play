@@ -49,7 +49,7 @@ export default function TopBanner() {
   return (
     <section
       onClick={() => navigate(PATHS.MOVIE(currentMovie.id))}
-      className="relative aspect-video w-full overflow-hidden rounded-xl"
+      className="relative aspect-video w-full overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -63,15 +63,42 @@ export default function TopBanner() {
         className="animate-ken-burns absolute inset-0 h-full w-full object-cover"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
-      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-        <div className="text-sm opacity-80">
-          Top 10 · {index + 1} / {data.length}
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-12 left-1/2 z-30 -translate-x-1/2 animate-bounce text-white/70">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="h-10 w-10 md:h-12 md:w-12"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+          />
+        </svg>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-8 pb-32 text-white">
+        <div className="mb-1">
+          <h2 className="flex items-center gap-2 text-[clamp(1.5rem,5vw,2.5rem)] font-bold tracking-tight text-white">
+            <span className="h-9 w-1.5 rounded-full bg-linear-to-b from-rose-500 to-orange-400 md:h-10" />
+            Top 10
+          </h2>
         </div>
-        <h2 className="line-clamp-1 text-[clamp(1.75rem,4.5vw,3rem)] font-semibold">
+        <h2 className="line-clamp-1 text-[clamp(2rem,5vw,3.5rem)] font-bold drop-shadow-lg">
+          <span className="mr-3 text-rose-500 drop-shadow-md">
+            {index + 1}위
+          </span>
           {currentMovie.title || currentMovie.name}
         </h2>
+        <div className="mt-2 text-base font-medium text-white/80 drop-shadow-md">
+          오늘 가장 많이 본 영화
+        </div>
       </div>
 
       {/* Progress Bar */}

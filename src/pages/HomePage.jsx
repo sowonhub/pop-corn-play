@@ -3,19 +3,19 @@ import { Container, Grid, Section, SectionHeader } from "@/components/ui";
 
 export default function HomePage() {
   return (
-    <Container className="space-y-12 pb-12">
-      <Section
-        header={
-          <SectionHeader title="Top 10" description="오늘 많이 본 영화" />
-        }
-      >
+    <div className="space-y-12 pb-12">
+      <Section className="w-full">
         <TopBanner />
       </Section>
-      <Section
-        header={<SectionHeader title="Popular" description="지금 뜨는 작품" />}
-      >
-        <Grid />
-      </Section>
-    </Container>
+      <Container className="max-w-6xl px-8">
+        <Section
+          header={
+            <SectionHeader title="Popular" description="지금 뜨는 작품" />
+          }
+        >
+          <Grid />
+        </Section>
+      </Container>
+    </div>
   );
 }

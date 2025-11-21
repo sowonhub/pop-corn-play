@@ -8,4 +8,5 @@ export { default as Input } from "@/components/ui/Input.jsx";
 export { default as SearchInput } from "@/components/ui/SearchInput.jsx";
 export { default as Section, SectionHeader } from "@/components/ui/Section.jsx";
 export { default as Skeleton } from "@/components/ui/Skeleton.jsx";
+export { default as Spinner } from "@/components/ui/Spinner.jsx";
 export { default as ThemeToggle } from "@/components/ui/ThemeToggle.jsx";

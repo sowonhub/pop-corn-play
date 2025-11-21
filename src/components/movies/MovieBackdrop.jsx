@@ -44,13 +44,14 @@ export default function MovieBackdrop({ images = [], backdropPath }) {
             src={image.file_path}
             type="backdrop"
             alt=""
-            className={`h-full w-full object-cover opacity-30 blur-xl dark:opacity-20 ${
+            wrapperClassName="h-full w-full"
+            className={`h-full w-full object-cover opacity-50 blur-sm dark:opacity-40 ${
               index === currentImageIndex ? "animate-ken-burns" : ""
             }`}
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/80 to-white dark:via-neutral-950/80 dark:to-neutral-950" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/60 to-white dark:via-neutral-950/60 dark:to-neutral-950" />
     </div>
   );
 }
