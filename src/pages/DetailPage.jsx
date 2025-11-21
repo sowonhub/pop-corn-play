@@ -60,13 +60,13 @@ export default function DetailPage() {
   }
 
   return (
-    <div className="relative min-h-screen pb-20">
+    <div className="relative isolate min-h-screen pb-20">
       <MovieBackdrop
         images={movieDetail.images?.backdrops}
         backdropPath={movieDetail.backdrop_path}
       />
 
-      <Container className="relative max-w-6xl px-4 py-8 md:py-12">
+      <Container className="relative max-w-6xl px-8 py-8 md:py-12">
         <MovieHeader movie={movieDetail} navigate={navigate} />
 
         {/* Similar Movies */}

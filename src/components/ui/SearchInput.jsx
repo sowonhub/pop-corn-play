@@ -3,7 +3,7 @@ import { cn } from "@/utils/cn";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-export default function SearchInput({ compact = false }) {
+export default function SearchInput({ compact = false, transparent = false }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const keyword = params.get("keyword") ?? "";
@@ -32,10 +32,20 @@ export default function SearchInput({ compact = false }) {
     >
       <div
         className={cn(
-          "relative flex items-center overflow-hidden rounded-full bg-neutral-100 transition-all dark:bg-neutral-900",
-          isFocused
-            ? "ring-2 ring-rose-500/50 bg-white dark:bg-neutral-800"
-            : "hover:bg-neutral-200 dark:hover:bg-neutral-800",
+          "relative flex items-center overflow-hidden rounded-full transition-all",
+          transparent
+            ? [
+                "border border-white/30 bg-black/30 backdrop-blur-sm",
+                isFocused
+                  ? "bg-black/50 ring-2 ring-rose-500/50"
+                  : "hover:bg-black/40",
+              ]
+            : [
+                "bg-neutral-100 dark:bg-neutral-900",
+                isFocused
+                  ? "bg-white ring-2 ring-rose-500/50 dark:bg-neutral-800"
+                  : "hover:bg-neutral-200 dark:hover:bg-neutral-800",
+              ],
         )}
       >
         <div className="flex h-full w-10 items-center justify-center text-neutral-400">
@@ -43,7 +53,7 @@ export default function SearchInput({ compact = false }) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className="h-5 w-5"
+            className={cn("h-5 w-5", transparent && "text-white/70")}
           >
             <path
               fillRule="evenodd"
@@ -56,7 +66,10 @@ export default function SearchInput({ compact = false }) {
           name="keyword"
           type="search"
           className={cn(
-            "w-full bg-transparent py-2.5 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:outline-none dark:text-neutral-100",
+            "w-full bg-transparent py-2.5 pr-4 text-sm focus:outline-none",
+            transparent
+              ? "text-white placeholder:text-white/70"
+              : "text-neutral-900 placeholder:text-neutral-500 dark:text-neutral-100",
             compact ? "py-2" : "h-11",
           )}
           aria-label="검색어"

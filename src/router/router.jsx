@@ -9,7 +9,7 @@ const DetailPage = lazy(() => import("@/pages/DetailPage"));
 const HomePage = lazy(() => import("@/pages/HomePage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const MyPage = lazy(() => import("@/pages/MyPage"));
-const QueryPage = lazy(() => import("@/pages/QueryPage"));
+const SearchPage = lazy(() => import("@/pages/SearchPage"));
 const SignupPage = lazy(() => import("@/pages/SignupPage"));
 
 // Loading Fallback
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: withSuspense(HomePage) },
-      { path: "search", element: withSuspense(QueryPage) },
+      { path: "search", element: withSuspense(SearchPage) },
       { path: "movie/:id", element: withSuspense(DetailPage) },
       { path: "login", element: withSuspense(LoginPage) },
       { path: "signup", element: withSuspense(SignupPage) },

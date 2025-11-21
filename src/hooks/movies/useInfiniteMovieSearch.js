@@ -1,8 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { EMPTY_SEARCH_RESULT, getMovieSearch } from "@/services/movie-database";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-export default function useMovieSearch(searchKeyword) {
-  const trimmedKeyword = (searchKeyword || "").trim();
+export default function useInfiniteMovieSearch(keyword) {
+  const trimmedKeyword = (keyword || "").trim();
   const hasKeyword = Boolean(trimmedKeyword);
 
   return useInfiniteQuery({
@@ -14,8 +14,11 @@ export default function useMovieSearch(searchKeyword) {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (!lastPage) return undefined;
-      return lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined;
+      return lastPage.page < lastPage.total_pages
+        ? lastPage.page + 1
+        : undefined;
     },
+
     enabled: hasKeyword,
   });
 }

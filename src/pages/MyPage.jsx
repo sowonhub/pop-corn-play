@@ -1,6 +1,6 @@
 import { useDatabaseAuth } from "@/auth";
 import { Card } from "@/components/movies";
-import { Container, EmptyState, Section, SectionHeader } from "@/components/ui";
+import { Container, EmptyState, Section } from "@/components/ui";
 import useWishlist from "@/hooks/useWishlist";
 import { PATHS } from "@/router";
 import { useMemo } from "react";
@@ -47,7 +47,7 @@ export default function MyPage() {
   }, [userInfo]);
 
   return (
-    <Container className="space-y-12 py-12">
+    <Container className="space-y-12 py-12 pt-20 md:pt-24">
       <Section>
         <div className="mx-auto flex max-w-2xl flex-col items-center space-y-6 text-center">
           {/* 프로필 이미지 영역 */}
@@ -72,20 +72,19 @@ export default function MyPage() {
           {/* 정보 텍스트 영역 */}
           <div className="w-full space-y-2">
             {!userInfo && (
-              <p className="text-sm text-neutral-500">
-                로그인이 필요합니다.
-              </p>
+              <p className="text-sm text-neutral-500">로그인이 필요합니다.</p>
             )}
 
             {userInfo && (
               <div className="space-y-1">
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                  {infoRows.find(r => r.key === 'nickname')?.value || '사용자'}
+                  {infoRows.find((r) => r.key === "nickname")?.value ||
+                    "사용자"}
                 </h2>
                 <p className="text-neutral-500 dark:text-neutral-400">
-                  {infoRows.find(r => r.key === 'email')?.value}
+                  {infoRows.find((r) => r.key === "email")?.value}
                 </p>
-                  </div>
+              </div>
             )}
           </div>
 
@@ -99,17 +98,15 @@ export default function MyPage() {
         </div>
       </Section>
 
-      <Section header={<SectionHeader title={`내 위시리스트 (${wishlist.length})`} className="mb-6" />}>
-        {wishlist.length === 0 ? (
-          <EmptyState message="아직 위시리스트에 담은 영화가 없습니다." />
-        ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {wishlist.map((movie) => (
-              <Card key={movie.id} movie={movie} />
-                ))}
-          </div>
-        )}
-      </Section>
+      {wishlist.length === 0 ? (
+        <EmptyState message="아직 위시리스트에 담은 영화가 없습니다." />
+      ) : (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {wishlist.map((movie) => (
+            <Card key={movie.id} movie={movie} />
+          ))}
+        </div>
+      )}
     </Container>
   );
 }
