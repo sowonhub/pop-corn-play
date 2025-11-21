@@ -2,29 +2,30 @@ import { databaseAuthClient } from "@/auth/client";
 import { DatabaseAuthContext } from "@/auth/context";
 import { useEffect, useMemo, useState } from "react";
 
-const EVENTS = {
-  SIGNED_IN: "SIGNED_IN",
-  SIGNED_OUT: "SIGNED_OUT",
-};
-
 export default function DatabaseAuthProvider({ children }) {
   const [databaseAuthUser, setDatabaseAuthUser] = useState(null);
   const [databaseAuthLoading, setDatabaseAuthLoading] = useState(true);
 
   useEffect(() => {
+    const initializeAuth = async () => {
+      const {
+        data: { session },
+      } = await databaseAuthClient.auth.getSession();
+      setDatabaseAuthUser(session?.user ?? null);
+      setDatabaseAuthLoading(false);
+    };
+
+    initializeAuth();
+
     const {
       data: { subscription },
-    } = databaseAuthClient.auth.onAuthStateChange((authEvent, authSession) => {
-      if (authEvent === EVENTS.SIGNED_IN) {
-        setDatabaseAuthUser(authSession.user);
-      } else if (authEvent === EVENTS.SIGNED_OUT) {
-        setDatabaseAuthUser(null);
-      }
+    } = databaseAuthClient.auth.onAuthStateChange((_event, session) => {
+      setDatabaseAuthUser(session?.user ?? null);
+      setDatabaseAuthLoading(false);
     });
 
     return () => {
       subscription.unsubscribe();
-      setDatabaseAuthLoading(false);
     };
   }, []);
 
