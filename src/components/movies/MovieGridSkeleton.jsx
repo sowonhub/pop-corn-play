@@ -1,18 +1,12 @@
-import { Skeleton } from "@/components/ui";
-import { cn } from "@/utils/cn";
+import { Grid, Skeleton } from "@/components/ui";
 
 export default function MovieGridSkeleton({ count = 10, className }) {
   return (
-    <div
-      className={cn(
-        "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
-        className,
-      )}
-    >
+    <Grid className={className}>
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900"
+          className="overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900"
         >
           <Skeleton className="aspect-2/3 w-full" />
           <div className="space-y-2 p-3">
@@ -21,7 +15,6 @@ export default function MovieGridSkeleton({ count = 10, className }) {
           </div>
         </div>
       ))}
-    </div>
+    </Grid>
   );
 }
-

@@ -4,12 +4,9 @@ import {
   EmptyState,
   ErrorState,
   Section,
-  SectionHeader,
-  Spinner,
 } from "@/components/ui";
 import { useInfiniteMovieSearch } from "@/hooks/movies";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const SKELETON_COUNT = 10;
@@ -51,14 +48,6 @@ function SearchResults({ state, data, pagination }) {
   const { movies, keyword } = data;
   const { fetchNextPage, hasNextPage, isFetchingNextPage } = pagination;
 
-  const handleLoadMore = useCallback(() => {
-    if (!isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [isFetchingNextPage, fetchNextPage]);
-
-  const loadMoreRef = useInfiniteScroll(handleLoadMore, hasNextPage);
-
   if (isLoading) {
     return <MovieGridSkeleton count={SKELETON_COUNT} />;
   }
@@ -74,14 +63,12 @@ function SearchResults({ state, data, pagination }) {
   }
 
   return (
-    <div>
-      <MovieGrid movies={movies} />
-      {(hasNextPage || isFetchingNextPage) && (
-        <div ref={loadMoreRef} className="mt-8 flex justify-center py-4">
-          {isFetchingNextPage && <Spinner />}
-        </div>
-      )}
-    </div>
+    <MovieGrid
+      movies={movies}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+    />
   );
 }
 

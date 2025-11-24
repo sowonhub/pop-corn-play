@@ -1,7 +1,7 @@
 import {
-  Card,
   MovieBackdrop,
   MovieGallery,
+  MovieGrid,
   MovieHeader,
 } from "@/components/movies";
 import DetailPageError from "@/components/movies/detail/DetailPageError";
@@ -45,11 +45,9 @@ export default function DetailPage() {
         {similarMovies && similarMovies.length > 0 && (
           <div className="mt-24 border-t border-neutral-200 pt-16 dark:border-neutral-800">
             <Section header={<SectionHeader title="이 영화와 비슷한 작품" />}>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {similarMovies.slice(0, SIMILAR_MOVIES_LIMIT).map((movie) => (
-                  <Card key={movie.id} movie={movie} />
-                ))}
-              </div>
+              <MovieGrid
+                movies={similarMovies.slice(0, SIMILAR_MOVIES_LIMIT)}
+              />
             </Section>
           </div>
         )}

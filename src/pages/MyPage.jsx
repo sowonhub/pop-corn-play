@@ -1,5 +1,5 @@
 import { useDatabaseAuth } from "@/auth";
-import { Card } from "@/components/movies";
+import { MovieGrid } from "@/components/movies";
 import { Container, EmptyState, Section } from "@/components/ui";
 import useWishlist from "@/hooks/useWishlist";
 import { PATHS } from "@/router";
@@ -101,11 +101,7 @@ export default function MyPage() {
       {wishlist.length === 0 ? (
         <EmptyState message="아직 위시리스트에 담은 영화가 없습니다." />
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {wishlist.map((movie) => (
-            <Card key={movie.id} movie={movie} />
-          ))}
-        </div>
+        <MovieGrid movies={wishlist} />
       )}
     </Container>
   );

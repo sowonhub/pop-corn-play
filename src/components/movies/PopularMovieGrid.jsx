@@ -1,7 +1,6 @@
-import { Card } from "@/components/movies";
-import { EmptyState, ErrorState, Skeleton, Grid } from "@/components/ui";
+import { MovieGrid, MovieGridSkeleton } from "@/components/movies";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { usePopularMovies } from "@/hooks/movies";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function PopularMovieGrid() {
   const {
@@ -13,29 +12,8 @@ export default function PopularMovieGrid() {
     isFetchingNextPage,
   } = usePopularMovies();
 
-  const loadMoreRef = useInfiniteScroll(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, hasNextPage);
-
   if (isLoading) {
-    return (
-      <Grid>
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div
-            key={i}
-            className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900"
-          >
-            <Skeleton className="aspect-2/3 w-full" />
-            <div className="space-y-2 p-3">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-3 w-1/3" />
-            </div>
-          </div>
-        ))}
-      </Grid>
-    );
+    return <MovieGridSkeleton />;
   }
 
   if (error) {
@@ -59,21 +37,11 @@ export default function PopularMovieGrid() {
   }
 
   return (
-    <div>
-      <Grid>
-        {list.map((m) => (
-          <Card key={m.id} movie={m} />
-        ))}
-      </Grid>
-      {/* Infinite Scroll Trigger */}
-      {(hasNextPage || isFetchingNextPage) && (
-        <div ref={loadMoreRef} className="mt-8 flex justify-center py-4">
-          {isFetchingNextPage && (
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-neutral-400 border-t-transparent dark:border-neutral-600" />
-          )}
-        </div>
-      )}
-    </div>
+    <MovieGrid
+      movies={list}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+    />
   );
 }
-
