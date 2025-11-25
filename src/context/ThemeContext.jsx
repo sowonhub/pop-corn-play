@@ -24,14 +24,9 @@ export function ThemeProvider({ children }) {
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 
-  // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e) => {
-      // Only update if user hasn't manually set a preference (optional strategy)
-      // But typically, if system changes, we might want to respect it OR
-      // if we strictly follow manual override, we ignore this.
-      // Here, we'll let the toggle button be the source of truth once set.
       if (!localStorage.getItem(THEME_KEY)) {
         setTheme(e.matches ? "dark" : "light");
       }
@@ -59,4 +54,3 @@ export function useTheme() {
   }
   return context;
 }
-

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 export default function MovieGallery({ images }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Disable scroll when lightbox is open
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = "hidden";
@@ -65,7 +64,6 @@ export default function MovieGallery({ images }) {
         </Section>
       </div>
 
-      {/* Lightbox Overlay */}
       {selectedImage && (
         <div
           className="fixed inset-0 z-50 flex animate-in fade-in items-center justify-center bg-black/90 p-4 backdrop-blur-sm duration-200"
@@ -106,4 +104,3 @@ export default function MovieGallery({ images }) {
     </>
   );
 }
-

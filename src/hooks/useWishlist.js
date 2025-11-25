@@ -1,7 +1,9 @@
 import { useDatabaseAuth } from "@/auth/context";
+import { PATHS } from "@/router";
 import { wishlistService } from "@/services/wishlist";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const normalizeMovie = (movie) => ({
   id: movie?.id,
@@ -13,8 +15,12 @@ const normalizeMovie = (movie) => ({
 });
 
 export default function useWishlist() {
-  const { user } = useDatabaseAuth();
+  const { user, busy: authBusy } = useDatabaseAuth();
   const userId = user?.id ?? null;
+  const isAuthenticated = Boolean(userId);
+  const isAuthLoading = Boolean(authBusy);
+  const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const queryKey = ["wishlist", userId];
@@ -28,27 +34,21 @@ export default function useWishlist() {
 
   const { mutate: addMutate } = useMutation({
     mutationFn: (movie) => wishlistService.addItem(userId, movie),
-    // 2. Optimistic Update: UI를 즉시 업데이트
     onMutate: async (movie) => {
-      // 진행 중인 쿼리 취소 (낙관적 업데이트 덮어쓰기 방지)
       await queryClient.cancelQueries({ queryKey });
       const previousItems = queryClient.getQueryData(queryKey) || [];
 
-      // 이미 목록에 없다면 추가
       if (!previousItems.some((item) => item.id === movie.id)) {
         queryClient.setQueryData(queryKey, [movie, ...previousItems]);
       }
 
-      // 에러 발생 시 롤백을 위한 컨텍스트 반환
       return { previousItems };
     },
-    // 3. 에러 처리: 이전 상태로 롤백
     onError: (err, newMovie, context) => {
       if (context?.previousItems) {
         queryClient.setQueryData(queryKey, context.previousItems);
       }
     },
-    // 4. 완료 처리: 서버 데이터와 동기화 (최신 데이터 보장)
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
     },
@@ -56,7 +56,6 @@ export default function useWishlist() {
 
   const { mutate: removeMutate } = useMutation({
     mutationFn: (movieId) => wishlistService.removeItem(userId, movieId),
-    // 2. Optimistic Update: UI를 즉시 업데이트
     onMutate: async (movieId) => {
       await queryClient.cancelQueries({ queryKey });
       const previousItems = queryClient.getQueryData(queryKey) || [];
@@ -68,13 +67,11 @@ export default function useWishlist() {
 
       return { previousItems };
     },
-    // 3. 에러 처리: 이전 상태로 롤백
     onError: (err, movieId, context) => {
       if (context?.previousItems) {
         queryClient.setQueryData(queryKey, context.previousItems);
       }
     },
-    // 4. 완료 처리: 서버 데이터와 동기화
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
     },
@@ -82,28 +79,37 @@ export default function useWishlist() {
 
   const add = useCallback(
     (movie) => {
-      if (!userId) {
+      if (!isAuthenticated) {
+        if (!isAuthLoading) {
+          navigate(PATHS.LOGIN, { state: { from: location } });
+        }
         return;
       }
       const normalized = normalizeMovie(movie);
       addMutate(normalized);
     },
-    [userId, addMutate],
+    [isAuthenticated, isAuthLoading, navigate, location, addMutate],
   );
 
   const remove = useCallback(
     (movieId) => {
-      if (!userId) {
+      if (!isAuthenticated) {
+        if (!isAuthLoading) {
+          navigate(PATHS.LOGIN, { state: { from: location } });
+        }
         return;
       }
       removeMutate(movieId);
     },
-    [userId, removeMutate],
+    [isAuthenticated, isAuthLoading, navigate, location, removeMutate],
   );
 
   const toggle = useCallback(
     (movie) => {
-      if (!userId) {
+      if (!isAuthenticated) {
+        if (!isAuthLoading) {
+          navigate(PATHS.LOGIN, { state: { from: location } });
+        }
         return;
       }
       const exists = items.some((item) => item.id === movie.id);
@@ -113,14 +119,17 @@ export default function useWishlist() {
         add(movie);
       }
     },
-    [userId, items, add, remove],
+    [isAuthenticated, isAuthLoading, navigate, location, items, add, remove],
   );
 
   const contains = useCallback(
     (movieId) => {
+      if (!isAuthenticated) {
+        return false;
+      }
       return items.some((item) => item.id === movieId);
     },
-    [items],
+    [items, isAuthenticated],
   );
 
   return {
@@ -129,5 +138,7 @@ export default function useWishlist() {
     remove,
     toggle,
     contains,
+    isAuthenticated,
+    isAuthLoading,
   };
 }

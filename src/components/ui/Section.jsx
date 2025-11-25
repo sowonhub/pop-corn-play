@@ -1,10 +1,20 @@
 import { cn } from "@/utils/cn";
 
-export default function Section({ header, className, children }) {
+export default function Section({
+  header,
+  className,
+  headerClassName,
+  children,
+}) {
   return (
     <section className={cn("mb-8 last:mb-0", className)}>
       {header && (
-        <div className="mb-4 flex items-end justify-between gap-3">
+        <div
+          className={cn(
+            "mb-4 flex items-end gap-3",
+            headerClassName ?? "justify-between",
+          )}
+        >
           {header}
         </div>
       )}
@@ -19,7 +29,9 @@ export function SectionHeader({ title, description, children, className }) {
 
   if (hasCustomContent) {
     return (
-      <div className={cn("flex items-end justify-between gap-3", className)}>
+      <div
+        className={cn("flex w-full items-end justify-between gap-3", className)}
+      >
         {children}
       </div>
     );
@@ -30,7 +42,6 @@ export function SectionHeader({ title, description, children, className }) {
       <div className={cn("mb-2 flex flex-col gap-1", className)}>
         {title && (
           <h2 className="flex items-center gap-2 text-[clamp(1rem,5vw,2rem)] font-bold tracking-tight text-neutral-900 dark:text-white">
-            {/* 포인트 라인 */}
             <span className="h-8 w-1.5 rounded-full bg-linear-to-b from-rose-500 to-orange-400 md:h-9" />
             {title}
           </h2>

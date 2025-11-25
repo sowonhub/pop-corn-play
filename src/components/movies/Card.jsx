@@ -8,14 +8,16 @@ import { formatMovieData } from "@/utils/format";
 
 export default function Card({ movie }) {
   const { title, voteAverage, year, posterPath, id } = formatMovieData(movie);
-  const { contains, toggle } = useWishlist();
+  const { contains, toggle, isAuthenticated, isAuthLoading } = useWishlist();
   const isWishlisted = contains(id);
+  const disabled = !isAuthenticated || isAuthLoading;
 
   return (
     <article className="group relative overflow-hidden rounded-xl border border-neutral-200 bg-white text-neutral-900 transition hover:-translate-y-0.5 hover:shadow-xl dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-50">
       <WishlistButton
         isWishlisted={isWishlisted}
         onClick={() => toggle(movie)}
+        disabled={disabled}
         className="absolute top-3 right-3 z-10"
       />
       <Link

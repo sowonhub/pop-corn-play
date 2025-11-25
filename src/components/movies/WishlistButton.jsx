@@ -3,24 +3,26 @@ import { cn } from "@/utils/cn";
 export default function WishlistButton({
   isWishlisted,
   onClick,
+  disabled = false,
   className,
-  variant = "icon", // 'icon' | 'text'
+  variant = "icon",
   label = "위시리스트",
 }) {
   return (
     <button
       type="button"
       onClick={(e) => {
+        if (disabled) return;
         e.preventDefault();
         e.stopPropagation();
         onClick && onClick(e);
       }}
       className={cn(
         "group relative inline-flex items-center justify-center transition-all active:scale-95",
+        disabled && "cursor-not-allowed opacity-60",
         variant === "icon" && "h-9 w-9 rounded-full",
         variant === "text" &&
           "h-10 gap-2 rounded-xl border px-4 text-sm font-medium",
-        // Active State (Wishlisted)
         isWishlisted && [
           "text-rose-500",
           variant === "icon" &&
@@ -28,7 +30,6 @@ export default function WishlistButton({
           variant === "text" &&
             "border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-900/50 dark:bg-rose-900/20 dark:text-rose-400",
         ],
-        // Inactive State
         !isWishlisted && [
           "text-neutral-500 hover:text-rose-400",
           variant === "icon" &&

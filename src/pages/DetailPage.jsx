@@ -41,7 +41,6 @@ export default function DetailPage() {
       <Container className="relative max-w-6xl px-8 py-8 md:py-12">
         <MovieHeader movie={movieDetail} navigate={navigate} />
 
-        {/* Similar Movies */}
         {similarMovies && similarMovies.length > 0 && (
           <div className="mt-24 border-t border-neutral-200 pt-16 dark:border-neutral-800">
             <Section header={<SectionHeader title="이 영화와 비슷한 작품" />}>

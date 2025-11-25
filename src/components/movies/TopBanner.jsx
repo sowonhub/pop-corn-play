@@ -11,7 +11,6 @@ const getImageUrl = (path, size = "w1280") =>
   getMovieImageUrl(path, "backdrop", size);
 
 const getNextIndex = (i, len) => (i + 1) % len;
-// const getPrevIndex = (i, len) => (i - 1 + len) % len;
 
 export default function TopBanner() {
   const { data, isLoading, error } = useTopMovies();
@@ -43,9 +42,6 @@ export default function TopBanner() {
     currentMovie.backdrop_path || currentMovie.poster_path,
   );
 
-  // const goPrev = () => setIndex((i) => getPrevIndex(i, data.length));
-  // const goNext = () => setIndex((i) => getNextIndex(i, data.length));
-
   return (
     <section
       onClick={() => navigate(PATHS.MOVIE(currentMovie.id))}
@@ -65,7 +61,6 @@ export default function TopBanner() {
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
-      {/* Scroll Down Indicator */}
       <div className="absolute bottom-12 left-1/2 z-30 -translate-x-1/2 animate-bounce text-white/70">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +96,6 @@ export default function TopBanner() {
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div className="absolute bottom-0 left-0 z-20 h-1 w-full bg-white/20">
         {!paused && (
           <div

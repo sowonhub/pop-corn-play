@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-/* Tailwind v4에서 다크 모드를 클래스 기반으로 강제 적용 */
 @variant dark (&:where(.dark, .dark *));
 
 @layer utilities {

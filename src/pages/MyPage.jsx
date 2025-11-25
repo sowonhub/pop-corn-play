@@ -22,17 +22,14 @@ export default function MyPage() {
 
     const { user_metadata, email } = userInfo;
 
-    // 1. 프로필 이미지
     const profileImage = user_metadata?.avatar_url || user_metadata?.picture;
 
-    // 2. 닉네임
     const nickname =
       user_metadata?.full_name ||
       user_metadata?.name ||
       user_metadata?.nickname ||
       user_metadata?.user_name;
 
-    // 3. 이메일 (identity_data 체크 포함)
     const identityEmail = userInfo.identities?.find(
       (identity) => identity?.identity_data?.email,
     )?.identity_data?.email;
@@ -50,7 +47,6 @@ export default function MyPage() {
     <Container className="space-y-12 py-12 pt-20 md:pt-24">
       <Section>
         <div className="mx-auto flex max-w-2xl flex-col items-center space-y-6 text-center">
-          {/* 프로필 이미지 영역 */}
           <div className="relative">
             <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-neutral-100 shadow-lg dark:border-neutral-800 dark:bg-neutral-800">
               {profileImage ? (
@@ -69,7 +65,6 @@ export default function MyPage() {
             </div>
           </div>
 
-          {/* 정보 텍스트 영역 */}
           <div className="w-full space-y-2">
             {!userInfo && (
               <p className="text-sm text-neutral-500">로그인이 필요합니다.</p>

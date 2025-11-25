@@ -1,18 +1,21 @@
-import { databaseAuthClient } from "@/auth/client";
+import { databaseAuthClient } from "@/services/database-auth/client";
 import { DatabaseAuthContext } from "@/auth/context";
 import { useEffect, useMemo, useState } from "react";
 
 export default function DatabaseAuthProvider({ children }) {
-  const [databaseAuthUser, setDatabaseAuthUser] = useState(null);
-  const [databaseAuthLoading, setDatabaseAuthLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [busy, setBusy] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const initializeAuth = async () => {
       const {
         data: { session },
       } = await databaseAuthClient.auth.getSession();
-      setDatabaseAuthUser(session?.user ?? null);
-      setDatabaseAuthLoading(false);
+      if (!isMounted) return;
+      setUser(session?.user ?? null);
+      setBusy(false);
     };
 
     initializeAuth();
@@ -20,11 +23,13 @@ export default function DatabaseAuthProvider({ children }) {
     const {
       data: { subscription },
     } = databaseAuthClient.auth.onAuthStateChange((_event, session) => {
-      setDatabaseAuthUser(session?.user ?? null);
-      setDatabaseAuthLoading(false);
+      if (!isMounted) return;
+      setUser(session?.user ?? null);
+      setBusy(false);
     });
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -32,7 +37,6 @@ export default function DatabaseAuthProvider({ children }) {
   const login = (email, password) =>
     databaseAuthClient.auth.signInWithPassword({ email, password });
 
-  // 정보 저장 되는 곳은 databaseAuthUser에 저장됨
   const signUp = (email, password) =>
     databaseAuthClient.auth.signUp({ email, password });
 
@@ -43,14 +47,14 @@ export default function DatabaseAuthProvider({ children }) {
 
   const contextValue = useMemo(
     () => ({
-      user: databaseAuthUser,
-      busy: databaseAuthLoading,
+      user,
+      busy,
       login,
       signUp,
       signInWithProvider,
       logout,
     }),
-    [databaseAuthUser, databaseAuthLoading],
+    [user, busy],
   );
 
   return (

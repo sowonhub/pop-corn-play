@@ -6,8 +6,6 @@ const BANNER_AUTO_SLIDE_INTERVAL_MS = 5000;
 export default function MovieBackdrop({ images = [], backdropPath }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // 1. 갤러리 이미지가 있으면 그것들을 사용 (최대 5개)
-  // 2. 없으면 기본 backdropPath 하나만 사용
   const displayImages =
     images?.length > 0
       ? images.slice(0, 5)

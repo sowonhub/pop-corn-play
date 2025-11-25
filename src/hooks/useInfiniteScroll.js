@@ -30,7 +30,7 @@ export function useInfiniteScroll(callback, hasMore = true) {
         observerRef.current.disconnect();
       }
     };
-  }, [hasMore]); // callback 제거하여 리렌더링 시 observer 재생성 방지
+  }, [hasMore]);
 
   return elementRef;
 }

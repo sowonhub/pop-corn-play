@@ -1,47 +1,53 @@
-import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "@/components/layout/Layout";
-import RequireDatabaseAuth from "@/router/RequireDatabaseAuth";
+import { PublicRoute, RequireDatabaseAuth } from "@/router";
 
-// Lazy load pages
-const DetailPage = lazy(() => import("@/pages/DetailPage"));
-const HomePage = lazy(() => import("@/pages/HomePage"));
-const LoginPage = lazy(() => import("@/pages/LoginPage"));
-const MyPage = lazy(() => import("@/pages/MyPage"));
-const SearchPage = lazy(() => import("@/pages/SearchPage"));
-const SignupPage = lazy(() => import("@/pages/SignupPage"));
-
-// Loading Fallback
-function PageLoader() {
-  return (
-    <div className="flex min-h-[50vh] items-center justify-center">
-      <div className="h-10 w-10 animate-spin rounded-full border-2 border-neutral-200 border-t-rose-500 dark:border-neutral-800" />
-    </div>
-  );
-}
-
-function withSuspense(Component) {
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <Component />
-    </Suspense>
-  );
-}
+import DetailPage from "@/pages/DetailPage";
+import HomePage from "@/pages/HomePage";
+import LoginPage from "@/pages/LoginPage";
+import MyPage from "@/pages/MyPage";
+import SearchPage from "@/pages/SearchPage";
+import SignupPage from "@/pages/SignupPage";
 
 export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { index: true, element: withSuspense(HomePage) },
-      { path: "search", element: withSuspense(SearchPage) },
-      { path: "movie/:id", element: withSuspense(DetailPage) },
-      { path: "login", element: withSuspense(LoginPage) },
-      { path: "signup", element: withSuspense(SignupPage) },
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
+      {
+        path: "movie/:id",
+        element: <DetailPage />,
+      },
+      {
+        path: "login",
+        element: (
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "signup",
+        element: (
+          <PublicRoute>
+            <SignupPage />
+          </PublicRoute>
+        ),
+      },
       {
         path: "mypage",
         element: (
-          <RequireDatabaseAuth>{withSuspense(MyPage)}</RequireDatabaseAuth>
+          <RequireDatabaseAuth>
+            <MyPage />
+          </RequireDatabaseAuth>
         ),
       },
     ],

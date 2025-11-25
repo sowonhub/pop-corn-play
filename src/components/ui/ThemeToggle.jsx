@@ -15,7 +15,6 @@ export default function ThemeToggle({ className }) {
       )}
       aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
     >
-      {/* Sun Icon (Show in Dark Mode) */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -42,7 +41,6 @@ export default function ThemeToggle({ className }) {
         <path d="m19.07 4.93-1.41 1.41" />
       </svg>
 
-      {/* Moon Icon (Show in Light Mode) */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

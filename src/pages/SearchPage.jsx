@@ -41,8 +41,6 @@ export default function SearchPage() {
   );
 }
 
-// --- Sub Components & Helpers ---
-
 function SearchResults({ state, data, pagination }) {
   const { isLoading, error, isEmpty } = state;
   const { movies, keyword } = data;

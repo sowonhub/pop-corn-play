@@ -1,4 +1,4 @@
-import { databaseAuthClient } from "@/auth/client";
+import { databaseAuthClient } from "@/services/database-auth/client";
 
 const TABLE_NAME = "wishlist";
 
@@ -13,14 +13,10 @@ export const wishlistService = {
     if (error) {
       throw error;
     }
-    // data is [{ movie: { ... } }, { movie: { ... } }]
     return (data || []).map((item) => item.movie);
   },
 
   async addItem(userId, movie) {
-    // Ensure movie is serializable and contains necessary fields
-    // This matches the normalizeMovie logic, but we save the whole object usually or just what we need.
-    // The previous implementation stored a specific shape. We should probably stick to that to save space/bandwidth.
     const { error } = await databaseAuthClient.from(TABLE_NAME).insert({
       user_id: userId,
       movie_id: movie.id,

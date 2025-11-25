@@ -8,23 +8,20 @@ const TRAILER_SITE = "YouTube";
 const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch";
 
 export default function MovieHeader({ movie, navigate }) {
-  const { toggle, contains } = useWishlist();
+  const { toggle, contains, isAuthenticated, isAuthLoading } = useWishlist();
   const inWish = contains(movie?.id);
+  const wishlistDisabled = !isAuthenticated || isAuthLoading;
 
   const toggleWish = () => {
-    if (movie) {
+    if (movie && !wishlistDisabled) {
       toggle(movie);
     }
   };
 
   const genres = (movie.genres || []).map((genre) => genre.name);
-  const meta = [
-    movie.release_date || "-",
-    movie.runtime ? minToHM(movie.runtime) : "-",
-    (movie.original_language || "").toUpperCase() || "-",
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const year = movie.release_date ? movie.release_date.split("-")[0] : "-";
+  const runtimeLabel = movie.runtime ? minToHM(movie.runtime) : "-";
+  const languageLabel = (movie.original_language || "").toUpperCase() || "-";
 
   const trailerResults = movie.videos?.results ?? [];
   const trailerVideo = trailerResults.find((video) => {
@@ -58,7 +55,6 @@ export default function MovieHeader({ movie, navigate }) {
 
   return (
     <>
-      {/* Navigation */}
       <div className="mb-8">
         <button
           type="button"
@@ -82,7 +78,6 @@ export default function MovieHeader({ movie, navigate }) {
       </div>
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[380px_1fr] xl:gap-16">
-        {/* Left Column: Poster */}
         <div className="lg:sticky lg:top-24 lg:self-start">
           <div className="group relative mx-auto aspect-2/3 w-full max-w-[380px] overflow-hidden rounded-2xl bg-neutral-100 shadow-2xl ring-1 ring-black/5 transition-transform duration-500 hover:scale-[1.02] dark:bg-neutral-900 dark:ring-white/10">
             <Image
@@ -93,7 +88,6 @@ export default function MovieHeader({ movie, navigate }) {
               height={570}
               className="h-full w-full object-cover"
             />
-            {/* Score Badge */}
             <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-xl bg-black/60 px-3 py-1.5 text-sm font-semibold text-white shadow-lg ring-1 ring-white/10 backdrop-blur-md">
               <span className="text-yellow-400">★</span>
               <span>{movie.vote_average?.toFixed(1) ?? "-"}</span>
@@ -101,23 +95,20 @@ export default function MovieHeader({ movie, navigate }) {
           </div>
         </div>
 
-        {/* Right Column: Details */}
         <div className="flex flex-col justify-center py-2">
-          {/* Title & Meta */}
           <div className="space-y-4">
             <h1 className="text-3xl leading-tight font-bold tracking-tight text-neutral-900 md:text-4xl lg:text-5xl dark:text-white">
               {movie.title}
             </h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-              <span>{movie.release_date?.split("-")[0]}</span>
+              <span>{year}</span>
               <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-              <span>{movie.runtime ? minToHM(movie.runtime) : "-"}</span>
+              <span>{runtimeLabel}</span>
               <span className="h-1 w-1 rounded-full bg-neutral-300 dark:bg-neutral-700" />
-              <span>{(movie.original_language || "").toUpperCase()}</span>
+              <span>{languageLabel}</span>
             </div>
           </div>
 
-          {/* Genres */}
           <div className="mt-8 flex flex-wrap gap-2">
             {genres.map((genreName) => (
               <span
@@ -129,7 +120,6 @@ export default function MovieHeader({ movie, navigate }) {
             ))}
           </div>
 
-          {/* Overview */}
           <div className="mt-8">
             <h3 className="mb-3 text-lg font-semibold text-neutral-900 dark:text-white">
               줄거리
@@ -139,7 +129,6 @@ export default function MovieHeader({ movie, navigate }) {
             </p>
           </div>
 
-          {/* Actions */}
           <div className="mt-10 flex flex-wrap items-center gap-4 border-t border-neutral-100 pt-8 dark:border-neutral-800">
             <Button
               type="button"
@@ -167,6 +156,7 @@ export default function MovieHeader({ movie, navigate }) {
             <WishlistButton
               isWishlisted={inWish}
               onClick={toggleWish}
+              disabled={wishlistDisabled}
               variant="text"
               label={inWish ? "위시리스트에 담김" : "위시리스트 담기"}
               className="h-12 min-w-[140px] rounded-xl border px-6 text-base transition-all"
@@ -177,4 +167,3 @@ export default function MovieHeader({ movie, navigate }) {
     </>
   );
 }
-

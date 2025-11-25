@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDatabaseAuth } from "@/auth";
+import { AuthActionPrompt } from "@/components/auth";
 import { Button, Input } from "@/components/ui";
 import { PATHS } from "@/router";
 
@@ -149,15 +150,11 @@ export default function SignupPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-neutral-600 dark:text-neutral-400">
-          이미 계정이 있으신가요?{" "}
-          <Link
-            to={PATHS.LOGIN}
-            className="font-medium text-neutral-900 hover:text-neutral-800 dark:text-white dark:hover:text-neutral-200"
-          >
-            로그인
-          </Link>
-        </p>
+        <AuthActionPrompt
+          message="이미 계정이 있으신가요?"
+          linkText="로그인"
+          to={PATHS.LOGIN}
+        />
       </div>
     </div>
   );

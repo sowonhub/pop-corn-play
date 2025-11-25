@@ -35,7 +35,7 @@ export async function getMovieDetail(
   return movieApiClient.get(MOVIE_API_ENDPOINTS.MOVIE_DETAIL(id), {
     params: {
       append_to_response: appendToResponse,
-      include_image_language: "ko,null,en", // 한국어, 언어 없음, 영어 이미지 포함
+      include_image_language: "ko,null,en",
     },
     signal,
   });

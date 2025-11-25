@@ -3,20 +3,29 @@ import { cn } from "@/utils/cn";
 import { Link } from "react-router-dom";
 
 function getUserDisplayInfo(user) {
-  const { user_metadata, email } = user;
+  const { user_metadata, email, identities } = user;
+  const identityData =
+    identities?.find((identity) => identity?.identity_data)?.identity_data ??
+    null;
 
-  // 1. 프로필 이미지가 있으면 이미지 URL 반환
-  if (user_metadata?.avatar_url) {
-    return { type: "image", value: user_metadata.avatar_url };
+  const avatarUrl =
+    user_metadata?.avatar_url ||
+    identityData?.avatar_url ||
+    identityData?.picture ||
+    identityData?.profile_image_url;
+  if (avatarUrl) {
+    return { type: "image", value: avatarUrl };
   }
 
-  // 2. 닉네임이 있으면 첫 글자 반환
-  const nickname = user_metadata?.full_name || user_metadata?.name;
+  const nickname =
+    user_metadata?.full_name ||
+    user_metadata?.name ||
+    identityData?.full_name ||
+    identityData?.name;
   if (nickname?.length) {
     return { type: "text", value: nickname[0].toUpperCase() };
   }
 
-  // 3. 이메일이 있으면 첫 글자 반환
   if (email?.length) {
     return { type: "text", value: email[0].toUpperCase() };
   }
