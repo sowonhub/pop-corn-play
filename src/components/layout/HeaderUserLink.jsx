@@ -1,44 +1,30 @@
+import { useState } from "react";
 import { PATHS } from "@/router";
 import { cn } from "@/utils/cn";
+import { getUserDisplay } from "@/utils/userDisplay";
 import { Link } from "react-router-dom";
 
-function getUserDisplayInfo(user) {
-  const { user_metadata, email, identities } = user;
-  const identityData =
-    identities?.find((identity) => identity?.identity_data)?.identity_data ??
-    null;
-
-  const avatarUrl =
-    user_metadata?.avatar_url ||
-    identityData?.avatar_url ||
-    identityData?.picture ||
-    identityData?.profile_image_url;
-  if (avatarUrl) {
-    return { type: "image", value: avatarUrl };
-  }
-
-  const nickname =
-    user_metadata?.full_name ||
-    user_metadata?.name ||
-    identityData?.full_name ||
-    identityData?.name;
-  if (nickname?.length) {
-    return { type: "text", value: nickname[0].toUpperCase() };
-  }
-
-  if (email?.length) {
-    return { type: "text", value: email[0].toUpperCase() };
-  }
-
-  return null;
-}
-
 export function HeaderUserLink({ user, className }) {
-  const displayInfo = getUserDisplayInfo(user);
+  const [avatarError, setAvatarError] = useState(false);
+  const display = getUserDisplay(user);
 
-  if (!displayInfo) {
+  if (!display) {
     return null;
   }
+
+  const showAvatar = Boolean(display.avatarUrl) && !avatarError;
+  const avatarContent = showAvatar ? (
+    <img
+      src={display.avatarUrl}
+      alt="User Profile"
+      className="h-full w-full object-cover"
+      onError={() => setAvatarError(true)}
+    />
+  ) : (
+    <span className="text-base font-bold text-neutral-600 md:text-lg dark:text-neutral-300">
+      {display.initial}
+    </span>
+  );
 
   return (
     <div className="flex shrink-0 items-center gap-2">
@@ -49,17 +35,7 @@ export function HeaderUserLink({ user, className }) {
           className,
         )}
       >
-        {displayInfo.type === "image" ? (
-          <img
-            src={displayInfo.value}
-            alt="User Profile"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <span className="text-base font-bold text-neutral-600 md:text-lg dark:text-neutral-300">
-            {displayInfo.value}
-          </span>
-        )}
+        {avatarContent}
       </Link>
     </div>
   );

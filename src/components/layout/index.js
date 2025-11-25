@@ -1,4 +1,5 @@
 export { default as Header } from "@/components/layout/Header.jsx";
+export { default as HeaderUserArea } from "@/components/layout/HeaderUserArea.jsx";
 export * from "@/components/layout/HeaderAuthLinks.jsx";
 export * from "@/components/layout/HeaderLogo.jsx";
 export * from "@/components/layout/HeaderUserLink.jsx";

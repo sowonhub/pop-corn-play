@@ -2,8 +2,8 @@ import {
   AuthActionPrompt,
   AuthCard,
   AuthDivider,
-  GoogleLoginButton,
-  KakaoLoginButton,
+  AuthLayout,
+  AuthSocialButtons,
   LoginForm,
   LoginIntro,
 } from "@/components/auth";
@@ -25,22 +25,16 @@ export default function LoginPage() {
   } = useLoginForm();
 
   return (
-    <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center px-4 pt-20 sm:px-6 lg:px-8">
+    <AuthLayout>
       <AuthCard>
-        <div className="text-center">
-          <LoginIntro />
-        </div>
-        <div className="mt-8 space-y-6">
-          <div className="grid grid-cols-1 gap-3">
-            <KakaoLoginButton
-              onClick={handleKakaoLogin}
-              loading={socialLoading}
-            />
-            <GoogleLoginButton
-              onClick={handleGoogleLogin}
-              loading={socialLoading}
-            />
-          </div>
+        <LoginIntro />
+
+        <div className="space-y-6">
+          <AuthSocialButtons
+            onKakaoLogin={handleKakaoLogin}
+            onGoogleLogin={handleGoogleLogin}
+            loading={socialLoading}
+          />
           <AuthDivider />
           <LoginForm
             email={email}
@@ -58,6 +52,6 @@ export default function LoginPage() {
           />
         </div>
       </AuthCard>
-    </div>
+    </AuthLayout>
   );
 }
