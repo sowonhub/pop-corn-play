@@ -1,3 +1,5 @@
+import heartFilledIcon from "@/assets/icons/heart-filled.svg?raw";
+import heartIcon from "@/assets/icons/heart.svg?raw";
 import { cn } from "@/utils/cn";
 
 export default function WishlistButton({
@@ -42,22 +44,17 @@ export default function WishlistButton({
       aria-pressed={isWishlisted}
       aria-label={isWishlisted ? "위시리스트에서 제거" : "위시리스트에 추가"}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill={isWishlisted ? "currentColor" : "none"}
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      <span
         className={cn(
-          "transition-transform duration-300 ease-out",
+          "inline-block transition-transform duration-300 ease-out",
           variant === "icon" ? "h-5 w-5" : "h-4 w-4",
           isWishlisted ? "scale-110" : "scale-100 group-hover:scale-110",
         )}
-      >
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-      </svg>
+        aria-hidden
+        dangerouslySetInnerHTML={{
+          __html: isWishlisted ? heartFilledIcon : heartIcon,
+        }}
+      />
       {variant === "text" && <span>{label}</span>}
     </button>
   );
