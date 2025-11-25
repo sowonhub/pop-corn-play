@@ -1,5 +1,8 @@
 import { WishlistButton } from "@/components/movies";
 import { Button, Image } from "@/components/ui";
+import arrowLeftIcon from "@/assets/icons/arrow-left.svg?raw";
+import playIcon from "@/assets/icons/play.svg?raw";
+import starIcon from "@/assets/icons/star.svg";
 import useWishlist from "@/hooks/useWishlist";
 import { minToHM } from "@/utils/format";
 
@@ -61,18 +64,11 @@ export default function MovieHeader({ movie, navigate }) {
           onClick={() => navigate(-1)}
           className="group inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/50 px-4 py-2 text-sm font-medium text-neutral-600 backdrop-blur-sm transition-all hover:border-neutral-300 hover:bg-white hover:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900/50 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 dark:hover:text-neutral-200"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="h-4 w-4 transition-transform group-hover:-translate-x-0.5"
-          >
-            <path
-              fillRule="evenodd"
-              d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <span
+            className="inline-block h-4 w-4 transition-transform group-hover:-translate-x-0.5"
+            aria-hidden
+            dangerouslySetInnerHTML={{ __html: arrowLeftIcon }}
+          />
           뒤로가기
         </button>
       </div>
@@ -89,7 +85,12 @@ export default function MovieHeader({ movie, navigate }) {
               className="h-full w-full object-cover"
             />
             <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-xl bg-black/60 px-3 py-1.5 text-sm font-semibold text-white shadow-lg ring-1 ring-white/10 backdrop-blur-md">
-              <span className="text-yellow-400">★</span>
+              <img
+                src={starIcon}
+                alt="별점"
+                className="h-4 w-4"
+                loading="lazy"
+              />
               <span>{movie.vote_average?.toFixed(1) ?? "-"}</span>
             </div>
           </div>
@@ -137,18 +138,11 @@ export default function MovieHeader({ movie, navigate }) {
               className="h-12 min-w-[140px] rounded-xl bg-neutral-900 px-6 text-base font-medium text-white hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 dark:hover:shadow-white/10"
             >
               <span className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <span
+                  className="inline-block h-5 w-5"
+                  aria-hidden
+                  dangerouslySetInnerHTML={{ __html: playIcon }}
+                />
                 예고편 보기
               </span>
             </Button>

@@ -1,6 +1,7 @@
 import { Image } from "@/components/ui";
 import { PATHS } from "@/router";
 import { Link } from "react-router-dom";
+import starIcon from "@/assets/icons/star.svg";
 
 import WishlistButton from "@/components/movies/WishlistButton";
 import useWishlist from "@/hooks/useWishlist";
@@ -40,7 +41,8 @@ export default function Card({ movie }) {
         </h3>
         <div className="flex items-center justify-between text-xs font-medium text-neutral-500 dark:text-neutral-400">
           <span className="flex items-center gap-1">
-            <span className="text-yellow-400">★</span> {voteAverage}
+            <img src={starIcon} alt="별점" className="h-4 w-4" loading="lazy" />{" "}
+            {voteAverage}
           </span>
           <span>{year}</span>
         </div>

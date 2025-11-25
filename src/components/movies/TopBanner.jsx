@@ -1,4 +1,5 @@
 import TopBannerSkeleton from "@/components/movies/TopBannerSkeleton";
+import chevronDownIcon from "@/assets/icons/chevron-down.svg?raw";
 import { useTopMovies } from "@/hooks/movies";
 import { PATHS } from "@/router";
 import { getMovieImageUrl } from "@/services/movie-database";
@@ -62,20 +63,11 @@ export default function TopBanner() {
       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
       <div className="absolute bottom-12 left-1/2 z-30 -translate-x-1/2 animate-bounce text-white/70">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="h-10 w-10 md:h-12 md:w-12"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-          />
-        </svg>
+        <span
+          className="inline-block h-10 w-10 md:h-12 md:w-12"
+          aria-hidden
+          dangerouslySetInnerHTML={{ __html: chevronDownIcon }}
+        />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-8 pb-32 text-white">
