@@ -1,10 +1,10 @@
 import { useDatabaseAuth } from "@/auth";
-import { MovieGrid } from "@/components/movies";
+import { MovieGrid, MovieGridSkeleton } from "@/components/movies";
 import { Container, EmptyState, Section } from "@/components/ui";
 import useWishlist from "@/hooks/useWishlist";
 import { PATHS } from "@/router";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LABELS = {
   email: "이메일",
@@ -13,7 +13,12 @@ const LABELS = {
 
 export default function MyPage() {
   const { user, logout } = useDatabaseAuth();
-  const { items: wishlist } = useWishlist();
+  const {
+    items: wishlist,
+    isLoading: wishlistLoading,
+    isPlaceholderData,
+  } = useWishlist();
+  const navigate = useNavigate();
 
   const userInfo = user;
 
@@ -83,17 +88,22 @@ export default function MyPage() {
             )}
           </div>
 
-          <Link
-            to={PATHS.HOME}
-            onClick={() => logout()}
+          <button
+            type="button"
+            onClick={async () => {
+              await logout();
+              navigate(PATHS.HOME, { replace: true });
+            }}
             className="mt-4 inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-6 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-200"
           >
             로그아웃
-          </Link>
+          </button>
         </div>
       </Section>
 
-      {wishlist.length === 0 ? (
+      {wishlistLoading || isPlaceholderData ? (
+        <MovieGridSkeleton count={6} />
+      ) : wishlist.length === 0 ? (
         <EmptyState message="아직 위시리스트에 담은 영화가 없습니다." />
       ) : (
         <MovieGrid movies={wishlist} />

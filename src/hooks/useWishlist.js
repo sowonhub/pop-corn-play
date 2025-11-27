@@ -25,11 +25,16 @@ export default function useWishlist() {
 
   const queryKey = ["wishlist", userId];
 
-  const { data: items = [] } = useQuery({
+  const {
+    data: items = [],
+    isLoading,
+    isFetching,
+    isPlaceholderData,
+  } = useQuery({
     queryKey,
     queryFn: () => wishlistService.getItems(userId),
     enabled: !!userId,
-    initialData: [],
+    placeholderData: [],
   });
 
   const { mutate: addMutate } = useMutation({
@@ -140,5 +145,8 @@ export default function useWishlist() {
     contains,
     isAuthenticated,
     isAuthLoading,
+    isLoading,
+    isFetching,
+    isPlaceholderData,
   };
 }

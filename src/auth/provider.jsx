@@ -2,6 +2,21 @@ import { databaseAuthClient } from "@/services/database-auth/client";
 import { DatabaseAuthContext } from "@/auth/context";
 import { useEffect, useMemo, useState } from "react";
 
+const clearLocalSession = () => {
+  try {
+    const projectRef =
+      new URL(databaseAuthClient?.supabaseUrl ?? "").hostname.split(".")[0];
+    const prefixes = projectRef
+      ? [`sb-${projectRef}-auth-token`, `sb-${projectRef}-auth-token.local`]
+      : ["sb-"];
+    Object.keys(localStorage)
+      .filter((key) => prefixes.some((prefix) => key.startsWith(prefix)))
+      .forEach((key) => localStorage.removeItem(key));
+  } catch {
+    // Best-effort cleanup; ignore errors
+  }
+};
+
 export default function DatabaseAuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [busy, setBusy] = useState(true);
@@ -43,7 +58,21 @@ export default function DatabaseAuthProvider({ children }) {
   const signInWithProvider = (provider, options) =>
     databaseAuthClient.auth.signInWithOAuth({ provider, options });
 
-  const logout = () => databaseAuthClient.auth.signOut();
+  const logout = async () => {
+    setBusy(true);
+    try {
+      const { error } = await databaseAuthClient.auth.signOut({
+        scope: "local",
+      });
+      if (error) {
+        console.error("Logout failed:", error);
+      }
+      clearLocalSession();
+      setUser(null);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const contextValue = useMemo(
     () => ({
@@ -58,6 +87,8 @@ export default function DatabaseAuthProvider({ children }) {
   );
 
   return (
-    <DatabaseAuthContext value={contextValue}>{children}</DatabaseAuthContext>
+    <DatabaseAuthContext.Provider value={contextValue}>
+      {children}
+    </DatabaseAuthContext.Provider>
   );
 }

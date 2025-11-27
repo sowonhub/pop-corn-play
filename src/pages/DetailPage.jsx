@@ -8,6 +8,7 @@ import DetailPageError from "@/components/movies/detail/DetailPageError";
 import DetailPageSkeleton from "@/components/movies/detail/DetailPageSkeleton";
 import { Container, Section, SectionHeader } from "@/components/ui";
 import { useMovieDetail, useSimilarMovies } from "@/hooks/movies";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const SIMILAR_MOVIES_LIMIT = 10;
@@ -17,6 +18,12 @@ export default function DetailPage() {
   const { id } = useParams();
   const { data: movieDetail, isLoading, error } = useMovieDetail(Number(id));
   const { data: similarMovies } = useSimilarMovies(Number(id));
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+  }, [id]);
 
   if (isLoading) {
     return <DetailPageSkeleton />;
