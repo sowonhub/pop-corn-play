@@ -1,5 +1,30 @@
+@import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
 @import "tailwindcss";
 @config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+
+  body {
+    font-family:
+      "Pretendard Variable",
+      "Pretendard",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+}
 
 @variant dark (&:where(.dark, .dark *));
 
